@@ -48,7 +48,7 @@ void Position::setY(char _y) {
 }
 
 std::ostream& operator<<(std::ostream& out, const Position& pos) {
-	out << ('A' + pos.x) << pos.y;
+	out << ('A' + pos.x) << pos.y + 1;
 	return out;
 }
 

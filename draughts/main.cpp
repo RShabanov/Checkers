@@ -3,20 +3,23 @@
 using namespace std;
 
 int main() {
-	//Checkers ch("input.txt");
+	// TODO: add file via CLI args
+	Checkers game("input.txt");
 	
-	char firstMove;
+	char firstColor;
 
 	while (true) {
 		cout << "First move (B or W): _\b";
-		cin >> firstMove;
-		firstMove = toupper(firstMove);
+		cin >> firstColor;
+		firstColor = toupper(firstColor);
 
-		if (strchr("BW", firstMove)) break;
+		if (strchr("BW", firstColor)) break;
 
 		system("cls");
 		cout << "Please, pay attention! Let's try again" << endl;;
 	}
+
+	game.run(firstColor == 'W' ? Color::WHITE : Color::BLACK);
 
 	return 0;
 }

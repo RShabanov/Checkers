@@ -41,4 +41,31 @@ void Checkers::fromFile(const std::string& filename) {
 			}
 		}
 	}
+
+	fin.close();
+}
+
+void Checkers::run(Color turnColor) {
+	std::vector<Position> moves;
+
+	while (true) {
+
+		if (blackCheckers.size() == 0 || whiteCheckers.size() == 0)
+			break;
+
+		turnColor = (turnColor == Color::BLACK) ? Color::WHITE : Color::BLACK;
+	}
+
+}
+
+void Checkers::save(const std::string& filename) const {
+	std::ofstream fout(filename);
+
+	if (!fout.is_open()) throw CheckersException();
+
+	for (const auto& [from, to] : moves) {
+		fout << from << " -> " << to << std::endl;
+	}
+
+	fout.close();
 }
