@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Checkers.h"
+#include "Man.h"
 using namespace std;
 
 int main() {
@@ -20,6 +21,7 @@ int main() {
 	}
 
 	game.run(firstColor == 'W' ? Color::WHITE : Color::BLACK);
+
 
 	return 0;
 }

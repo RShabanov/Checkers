@@ -5,6 +5,10 @@ Checkers::Checkers(const std::string& filename) {
 	fromFile(filename);
 }
 
+Checkers::~Checkers() {
+	std::cout << "Everything deleted\n";
+}
+
 void Checkers::fromFile(const std::string& filename) {
 	std::ifstream fin(filename);
 
@@ -25,8 +29,8 @@ void Checkers::fromFile(const std::string& filename) {
 				getline(fin, buff);
 				Position pos(buff);
 
-				figure = new Man(pos, Color::WHITE);
-				whiteCheckers.push_back(std::make_shared<Figure*>(figure));
+				figure = dynamic_cast<Figure*>(new Man(pos, Color::WHITE));
+				whiteCheckers.emplace_back(std::shared_ptr<Figure>(figure));
 				board[pos.getX()][pos.getY()] = figure;
 			}
 		}
@@ -35,8 +39,8 @@ void Checkers::fromFile(const std::string& filename) {
 				getline(fin, buff);
 				Position pos(buff);
 
-				figure = new Man(pos, Color::BLACK);
-				blackCheckers.push_back(std::make_shared<Figure*>(figure));
+				figure = dynamic_cast<Figure*>(new Man(pos, Color::BLACK));
+				blackCheckers.emplace_back(std::shared_ptr<Figure>(figure));
 				board[pos.getX()][pos.getY()] = figure;
 			}
 		}
@@ -49,9 +53,9 @@ void Checkers::run(Color turnColor) {
 	//Moves moves;
 
 	while (true) {
-
+		break;
 		if (turnColor == Color::WHITE) {
-			(*whiteCheckers[0])->possibleMoves(board);
+			whiteCheckers[0]->possibleMoves(board);
 		}
 		else {
 
