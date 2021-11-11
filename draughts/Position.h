@@ -23,6 +23,9 @@ public:
 	void setX(char);
 	void setY(char);
 
+	bool operator==(const Position&) const;
+	Position& operator=(const Position&);
+
 	friend std::ostream& operator<<(std::ostream&, const Position&);
 	friend std::istream& operator>>(std::istream&, Position*);
 };

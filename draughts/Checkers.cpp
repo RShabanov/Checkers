@@ -46,9 +46,16 @@ void Checkers::fromFile(const std::string& filename) {
 }
 
 void Checkers::run(Color turnColor) {
-	std::vector<Position> moves;
+	//Moves moves;
 
 	while (true) {
+
+		if (turnColor == Color::WHITE) {
+			(*whiteCheckers[0])->possibleMoves(board);
+		}
+		else {
+
+		}
 
 		if (blackCheckers.size() == 0 || whiteCheckers.size() == 0)
 			break;
@@ -63,9 +70,6 @@ void Checkers::save(const std::string& filename) const {
 
 	if (!fout.is_open()) throw CheckersException();
 
-	for (const auto& [from, to] : moves) {
-		fout << from << " -> " << to << std::endl;
-	}
 
 	fout.close();
 }

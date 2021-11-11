@@ -8,8 +8,10 @@
 class Figure;
 
 using Board = std::array<std::array<Figure*, BOARD_SIZE>, BOARD_SIZE>;
+using Moves = std::vector<std::vector<Position>>;
 
 class Figure {
+protected:
 	Color color;
 	Position position;
 
@@ -17,7 +19,7 @@ public:
 	explicit Figure(const Position&, Color);
 	virtual ~Figure() = default;
 
-	virtual std::vector<Position> possibleMoves(const Board&) const = 0;
+	virtual Moves possibleMoves(const Board&) const = 0;
 	virtual bool isQueen() const = 0;
 	Color getColor() const;
 

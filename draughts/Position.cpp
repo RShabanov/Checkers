@@ -13,7 +13,7 @@ Position::Position(const std::string& pos) {
 	y = pos.back();
 	if (y < '1' || y > '8')
 		throw PositionException();
-	y -= '1';
+	y = BOARD_SIZE - 1 - (y - '1');
 }
 
 Position::Position(const Position& pos)
@@ -47,6 +47,16 @@ void Position::setY(char _y) {
 	y = _y;
 }
 
+bool Position::operator==(const Position& o) const {
+	return x == o.x && y == o.y;
+}
+
+Position& Position::operator=(const Position& o) {
+	x = o.x;
+	y = o.y;
+	return *this;
+}
+
 std::ostream& operator<<(std::ostream& out, const Position& pos) {
 	out << ('A' + pos.x) << pos.y + 1;
 	return out;
@@ -62,7 +72,7 @@ std::istream& operator>>(std::istream& in, Position* pos) {
 	in >> pos->y;
 	if (pos->y < '1' || pos->y > '8')
 		throw PositionException();
-	pos->y %= '1';
+	pos->y = BOARD_SIZE - 1 - (pos->y - '1');
 
 	return in;
 }

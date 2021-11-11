@@ -12,7 +12,7 @@ class CheckersException : public std::exception {};
 class Checkers {
 	Board board{ nullptr };
 	std::vector<std::shared_ptr<Figure*>> blackCheckers, whiteCheckers;
-	std::vector<std::pair<Position, Position>> moves;
+	Moves moves;
 
 public:
 	explicit Checkers(const std::string& filename);
