@@ -25,6 +25,7 @@ public:
 
 	const Position& getPosition() const;
 	void setPosition(char, char);
+	void setPosition(const Position&);
 	char getX() const;
 	char getY() const;
 };

@@ -3,7 +3,7 @@
 #include "Board.h"
 #include <algorithm>
 
-class Man final : public Figure {
+class Man : public Figure {
 	void eatMove(const Board&, Position current, Position opponent, Moves*, size_t idx) const;
 
 public:

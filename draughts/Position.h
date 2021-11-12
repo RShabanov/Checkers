@@ -15,7 +15,6 @@ public:
 	Position(Position&&);
 	~Position() = default;
 
-	std::pair<char, char> get() const;
 	char getX() const;
 	char getY() const;
 
@@ -26,7 +25,9 @@ public:
 	bool operator==(const Position&) const;
 	Position& operator=(const Position&);
 
+	int distanceTo(const Position&) const;
+
 	friend std::ostream& operator<<(std::ostream&, const Position&);
-	friend std::istream& operator>>(std::istream&, Position*);
+	friend std::istream& operator>>(std::istream&, Position&);
 };
 

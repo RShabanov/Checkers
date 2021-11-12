@@ -8,12 +8,12 @@ Moves Man::possibleMoves(const Board& board) const {
 
 	for (int x = -1; x < 2; x += 2) {
 		int nx = position.getX() + x;
-		if (nx < 0 || nx >= BOARD_SIZE) continue;
+		if (!board.onBoard(nx, 0)) continue;
 
 		for (int y = -1; y < 2; y += 2) {
 			int	ny = position.getY() + y;
 
-			if (ny < 0 || ny >= BOARD_SIZE)
+			if (!board.onBoard(nx, ny))
 				continue;
 
 			// if the current cell is not empty
@@ -24,21 +24,23 @@ Moves Man::possibleMoves(const Board& board) const {
 					nx += x;
 					ny += y;
 
-					if (nx < 0 || nx >= BOARD_SIZE ||
-						ny < 0 || ny >= BOARD_SIZE) continue;
+					if (!board.onBoard(nx, ny)) continue;
 
 					if (board.isEmpty(nx, ny)) {
 						chainMoves.emplace_back(std::vector<Position>(1, Position(nx, ny)));
 						eatMove(board, Position(nx, ny), Position(nx - x, ny - y), &chainMoves, chainMoves.size() - 1);
 					}
+
+					nx -= x;
+					ny -= y;
 				}
 			}
 			// if we have something to kill
 			// we've got to kill it
 			else if (chainMoves.empty()) {
 				// since the whites are below the black ones
-				if ((color == Color::WHITE && y > 0) ||
-					(color == Color::BLACK && y < 0))
+				if ((color == Color::WHITE && y < 0) ||
+					(color == Color::BLACK && y > 0))
 					continue;
 
 				oneStepMoves.emplace_back(std::vector<Position>(1, Position(nx, ny)));
@@ -74,23 +76,23 @@ void Man::eatMove(
 
 	for (int x = -1; x < 2; x += 2) {
 		int nx = current.getX() + x;
-		if (nx < 0 || nx >= BOARD_SIZE) continue;
+		if (!board.onBoard(nx, 0)) continue;
 
 		for (int y = -1; y < 2; y += 2) {
 			int	ny = current.getY() + y;
 
-			if (ny < 0 || ny >= BOARD_SIZE ||
+			if (!board.onBoard(nx, ny) ||
 				Position(nx, ny) == opponent)
 				continue;
 
 			// if there is a neighbor
-			if (board.data[nx][ny] != nullptr &&
+			if (!board.isEmpty(nx, ny) &&
 				board.data[nx][ny]->getColor() != color) {
 
 				nx += x;
 				ny += y;
 
-				if (board.data[nx][ny] == nullptr) {
+				if (board.isEmpty(nx, ny)) {
 					if (finishBranch) {
 						finishBranch = false;
 

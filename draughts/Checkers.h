@@ -14,7 +14,7 @@
 class CheckersException : public std::exception {};
 
 class Checkers {
-	Board board{ nullptr };
+	Board board;
 	Moves history;
 
 	std::vector<Board> getAllMoves(const Board& board, Color color);
