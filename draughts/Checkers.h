@@ -10,6 +10,7 @@
 #include <string>
 #include <regex>
 #include <tuple>
+#include <limits>
 
 class CheckersException : public std::exception {};
 
@@ -26,7 +27,7 @@ class Checkers {
 
 public:
 	explicit Checkers(const std::string& filename);
-	~Checkers();
+	~Checkers() = default;
 
 	void fromFile(const std::string& filename);
 

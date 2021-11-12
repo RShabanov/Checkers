@@ -5,10 +5,6 @@ Checkers::Checkers(const std::string& filename) {
 	board.state = { Color::WHITE, GameState::STILL_PLAYING };
 }
 
-Checkers::~Checkers() {
-	std::cout << "Everything deleted\n";
-}
-
 void Checkers::fromFile(const std::string& filename) {
 	std::ifstream fin(filename);
 
@@ -69,7 +65,7 @@ void Checkers::run(Color _turnColor) {
 	auto checkers = (board.state.turnColor == Color::BLACK) ? &board.white : &board.black;
 
 	while (board.state.state == GameState::STILL_PLAYING) {
-		auto [score, newBoard] = minimax(board, 3, board.state.turnColor == Color::WHITE);
+		auto [score, newBoard] = minimax(board, 2, board.state.turnColor == Color::WHITE);
 
 		board = std::move(newBoard);
 		history.emplace_back(board.history);
@@ -184,7 +180,7 @@ std::pair<double, Board> Checkers::minimax(Board& board, int depth, bool whiteTu
 	Board bestMove = board;
 
 	if (whiteTurn) {
-		double maxScore = -DBL_MAX;
+		double maxScore = -std::numeric_limits<double>::infinity();
 		auto moves = getAllMoves(board, Color::WHITE);
 		for (auto& newBoard : moves) {
 			auto [score, _] = minimax(newBoard, depth - 1, false);
@@ -198,7 +194,7 @@ std::pair<double, Board> Checkers::minimax(Board& board, int depth, bool whiteTu
 		return { maxScore, std::move(bestMove) };
 	}
 	else {
-		double minScore = DBL_MAX;
+		double minScore = std::numeric_limits<double>::infinity();
 
 		auto moves = getAllMoves(board, Color::BLACK);
 		for (auto& newBoard : moves) {

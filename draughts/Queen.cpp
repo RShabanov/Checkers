@@ -10,7 +10,7 @@ Moves Queen::possibleMoves(const Board& board) const {
 	Moves moves;
 	constexpr int QUEEN_DEPTH = 3;
 
-	moves = getPossibleAttacks(board, position);
+	moves = getPossibleAttacks(const_cast<Board&>(board), position);
 
 	// at least, if don't have any possible attacks
 	// we can jump to cell where we can attack from
@@ -35,10 +35,9 @@ Moves Queen::possibleMoves(const Board& board) const {
 	return std::move(moves);
 }
 
-Moves Queen::getPossibleAttacks(const Board& board, const Position& pos) const {
+Moves Queen::getPossibleAttacks(Board& board, const Position& pos) const {
 	std::vector<Position> oneLineAttacks;
 	Moves attacks;
-	bool gotLine = false;
 
 	for (int x = -1; x < 2; x += 2) {
 		for (int y = -1; y < 2; y += 2) {
@@ -50,46 +49,45 @@ Moves Queen::getPossibleAttacks(const Board& board, const Position& pos) const {
 				if (!board.isEmpty(nx, ny)) {
 					if (board.data[nx][ny]->getColor() == color) break;
 					else {
-						nx += x;
-						ny += y;
+						Position opponentPosition(nx, ny);
+						do {
+							nx += x;
+							ny += y;
 
-						if (!board.onBoard(nx, ny)) break;
+							if (!board.onBoard(nx, ny)) break;
 
-						if (board.isEmpty(nx, ny)) {
-							gotLine = true;
-							oneLineAttacks.emplace_back(Position(nx, ny));
-						}
-						else break;
+							if (board.isEmpty(nx, ny)) {
+								Position attackPosition(nx, ny);
+								//oneLineAttacks.emplace_back(attackPosition);
+
+								Figure* const tempOpponentStorage = board[opponentPosition];
+								board[opponentPosition] = nullptr;
+
+								auto possibleMovesFrom = getPossibleAttacks(board, attackPosition);
+								if (possibleMovesFrom.empty()) {
+									attacks.emplace_back(std::vector<Position>(1, attackPosition));
+								}
+								else {
+									auto startIdx = attacks.size();
+									attacks.emplace_back(std::vector<Position>(possibleMovesFrom.size(), attackPosition));
+
+									for (size_t i = startIdx; i < possibleMovesFrom.size(); i++) {
+										attacks[i].insert(attacks[i].end(),
+											possibleMovesFrom[i % startIdx].begin(),
+											possibleMovesFrom[i % startIdx].end());
+									}
+								}
+
+								board[opponentPosition] = tempOpponentStorage;
+							}
+							else break;
+						} while (true);
 					}
 
 				}
 
 				nx += x;
 				ny += y;
-			}
-
-			if (gotLine) {
-				ny = pos.getY() + y;
-				nx = pos.getX() + x;
-
-				while (!(oneLineAttacks.back() == Position(nx, ny)) &&
-					nx > 0 && nx < BOARD_SIZE &&
-					ny > 0 && ny < BOARD_SIZE) {
-
-					if (board.isEmpty(nx - x, ny - y) && 
-						board.onBoard(nx - x * 2, ny - y * 2)) {
-
-						if (board.isEmpty(nx - x*2, ny - y*2) ||
-							board.data[nx - x * 2][ny - y * 2]->getColor() != color)
-							oneLineAttacks.emplace_back(Position(nx - x, ny - y));
-					}
-					nx += x;
-					ny += y;
-				}
-
-				attacks.emplace_back(std::move(oneLineAttacks));
-				oneLineAttacks.clear();
-				gotLine = false;
 			}
 		}
 	}

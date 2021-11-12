@@ -5,7 +5,7 @@
 #include <algorithm>
 
 class Queen : public Figure {
-	Moves getPossibleAttacks(const Board& board, const Position& pos) const;
+	Moves getPossibleAttacks(Board& board, const Position& pos) const;
 	bool canAttackFrom(const Board&, const Position&) const;
 public:
 	explicit Queen(const Position&, Color);
