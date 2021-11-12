@@ -8,22 +8,25 @@ Queen::Queen(Man&& man)
 
 Moves Queen::possibleMoves(const Board& board) const {
 	Moves moves;
-	constexpr int QUEEN_DEPTH = 3;
 
 	moves = getPossibleAttacks(const_cast<Board&>(board), position);
 
 	// at least, if don't have any possible attacks
 	// we can jump to cell where we can attack from
 	if (moves.empty()) {
-		for (int step = 1; step < BOARD_SIZE - 1; step++) {
-			for (int signX = -1; signX < 2; signX += 2) {
-				if (!board.onBoard(step * signX, 0)) continue;
+		auto maxValidStep = BOARD_SIZE - (position.getX() > position.getY() ? position.getX() : position.getY());
 
-				for (int signY = -1; signY < 2; signY += 2) {
-					if (!board.onBoard(step * signX, step * signY)) continue;
+		for (int signX = -1; signX < 2; signX += 2) {
+			for (int signY = -1; signY < 2; signY += 2) {
+				for (int step = 1; step <= maxValidStep; step++) {
+					int nx = position.getX() + step * signX,
+						ny = position.getY() + step * signY;
 
-					Position from(signX * step, signY * step);
-
+					if (!board.onBoard(nx, ny) ||
+						(!board.isEmpty(nx, ny) &&
+						board.data[nx][ny]->getColor() == color)) break;
+					
+					Position from(nx, ny);
 					if (canAttackFrom(board, from)) {
 						moves.emplace_back(std::vector<Position>(1, from));
 					}
@@ -36,7 +39,6 @@ Moves Queen::possibleMoves(const Board& board) const {
 }
 
 Moves Queen::getPossibleAttacks(Board& board, const Position& pos) const {
-	std::vector<Position> oneLineAttacks;
 	Moves attacks;
 
 	for (int x = -1; x < 2; x += 2) {
@@ -50,6 +52,8 @@ Moves Queen::getPossibleAttacks(Board& board, const Position& pos) const {
 					if (board.data[nx][ny]->getColor() == color) break;
 					else {
 						Position opponentPosition(nx, ny);
+						Figure* const tempOpponentStorage = board[opponentPosition];
+
 						do {
 							nx += x;
 							ny += y;
@@ -58,9 +62,6 @@ Moves Queen::getPossibleAttacks(Board& board, const Position& pos) const {
 
 							if (board.isEmpty(nx, ny)) {
 								Position attackPosition(nx, ny);
-								//oneLineAttacks.emplace_back(attackPosition);
-
-								Figure* const tempOpponentStorage = board[opponentPosition];
 								board[opponentPosition] = nullptr;
 
 								auto possibleMovesFrom = getPossibleAttacks(board, attackPosition);
@@ -69,22 +70,22 @@ Moves Queen::getPossibleAttacks(Board& board, const Position& pos) const {
 								}
 								else {
 									auto startIdx = attacks.size();
-									attacks.emplace_back(std::vector<Position>(possibleMovesFrom.size(), attackPosition));
 
 									for (size_t i = startIdx; i < possibleMovesFrom.size(); i++) {
+										attacks.emplace_back(std::vector<Position>(1, attackPosition));
+
 										auto possibleMovesIdx = startIdx > 0 ? i % startIdx : i;
 										attacks[i].insert(attacks[i].end(),
 											possibleMovesFrom[possibleMovesIdx].begin(),
 											possibleMovesFrom[possibleMovesIdx].end());
 									}
 								}
-
-								board[opponentPosition] = tempOpponentStorage;
 							}
 							else break;
 						} while (true);
-					}
 
+						board[opponentPosition] = tempOpponentStorage;
+					}
 				}
 
 				nx += x;
