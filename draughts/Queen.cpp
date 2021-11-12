@@ -13,6 +13,9 @@ Moves Queen::possibleMoves(const Board& board) const {
 	moves = getPossibleAttacks(board, position);
 	
 	// TODO: finish chain move
+	// try to use map
+	// and start position as a key
+	// values = vector of moves from this point
 
 	return moves;
 }
@@ -34,8 +37,8 @@ Moves Queen::getPossibleAttacks(const Board& board, const Position& pos) const {
 			while ((nx >= 0 && nx < BOARD_SIZE) &&
 				(ny >= 0 && ny < BOARD_SIZE)) {
 
-				if (board[nx][ny] != nullptr) {
-					if (board[nx][ny]->getColor() == color) break;
+				if (board.data[nx][ny] != nullptr) {
+					if (board.data[nx][ny]->getColor() == color) break;
 					else {
 						nx += x;
 						ny += y;
@@ -43,7 +46,7 @@ Moves Queen::getPossibleAttacks(const Board& board, const Position& pos) const {
 						if ((nx < 0 || nx >= BOARD_SIZE) ||
 							(ny < 0 || ny >= BOARD_SIZE)) break;
 
-						if (board[nx][ny] == nullptr) {
+						if (board.data[nx][ny] == nullptr) {
 							gotLine = true;
 							oneLineAttacks.emplace_back(Position(nx, ny));
 						}
@@ -64,9 +67,9 @@ Moves Queen::getPossibleAttacks(const Board& board, const Position& pos) const {
 					nx > 0 && nx < BOARD_SIZE &&
 					ny > 0 && ny < BOARD_SIZE) {
 
-					if (board[nx - x][ny - y] == nullptr) {
-						if (!(board[nx - x * 2][ny - y * 2] != nullptr &&
-							board[nx - x * 2][ny - y * 2]->getColor() != color))
+					if (board.data[nx - x][ny - y] == nullptr) {
+						if (!(board.data[nx - x * 2][ny - y * 2] != nullptr &&
+							board.data[nx - x * 2][ny - y * 2]->getColor() != color))
 							oneLineAttacks.emplace_back(Position(nx - x, ny - y));
 					}
 					nx += x;

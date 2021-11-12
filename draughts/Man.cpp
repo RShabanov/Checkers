@@ -17,14 +17,14 @@ Moves Man::possibleMoves(const Board& board) const {
 				continue;
 
 			// if the current cell is not empty
-			if (board[nx][ny] != nullptr) {
+			if (!board.isEmpty(nx, ny)) {
 
 				// if the cell after the current cell is empty
-				if (board[nx][ny]->getColor() != color) {
+				if (board.data[nx][ny]->getColor() != color) {
 					nx += x;
 					ny += y;
 
-					if (board[nx][ny] == nullptr) {
+					if (board.isEmpty(nx, ny)) {
 						chainMoves.emplace_back(std::vector<Position>(1, Position(nx, ny)));
 						eatMove(board, Position(nx, ny), Position(nx - x, ny - y), &chainMoves, chainMoves.size() - 1);
 					}
@@ -81,13 +81,13 @@ void Man::eatMove(
 				continue;
 
 			// if there is a neighbor
-			if (board[nx][ny] != nullptr &&
-				board[nx][ny]->getColor() != color) {
+			if (board.data[nx][ny] != nullptr &&
+				board.data[nx][ny]->getColor() != color) {
 
 				nx += x;
 				ny += y;
 
-				if (board[nx][ny] == nullptr) {
+				if (board.data[nx][ny] == nullptr) {
 					if (finishBranch) {
 						finishBranch = false;
 

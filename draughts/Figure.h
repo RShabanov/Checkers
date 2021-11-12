@@ -6,9 +6,8 @@
 #include <array>
 #include <iostream>
 
-class Figure;
+struct Board;
 
-using Board = std::array<std::array<Figure*, BOARD_SIZE>, BOARD_SIZE>;
 using Moves = std::vector<std::vector<Position>>;
 
 class Figure {
@@ -24,6 +23,7 @@ public:
 	virtual bool isQueen() const = 0;
 	Color getColor() const;
 
+	const Position& getPosition() const;
 	char getX() const;
 	char getY() const;
 };

@@ -3,22 +3,27 @@
 #include "Color.h"
 #include "Man.h"
 #include "Queen.h"
+#include "Board.h"
 
 #include <vector>
 #include <fstream>
 #include <string>
 #include <regex>
+#include <tuple>
 
 class CheckersException : public std::exception {};
 
 class Checkers {
 	Board board{ nullptr };
-	std::vector<std::shared_ptr<Figure>> blackCheckers, whiteCheckers;
 	Moves moves;
-	Color turnColor;
 
-	void move(Position, std::vector<Position>&);
-	int score() const;
+	std::vector<Board> getAllMoves(const Board& board, Color color);
+	std::vector<Position> getBestMove(Color color);
+	void simulateMove(Board* board, Position position, const std::vector<Position>& move);
+
+	std::pair<double, Board> minimax(const Board& board, int depth, bool max);
+
+	Board createBoard(const Board& board) const;
 
 public:
 	explicit Checkers(const std::string& filename);
