@@ -24,9 +24,8 @@ Moves Man::possibleMoves(const Board& board) const {
 					nx += x;
 					ny += y;
 
-					if (!board.onBoard(nx, ny)) continue;
-
-					if (board.isEmpty(nx, ny)) {
+					if (board.onBoard(nx, ny) && 
+						board.isEmpty(nx, ny)) {
 						chainMoves.emplace_back(std::vector<Position>(1, Position(nx, ny)));
 						eatMove(board, Position(nx, ny), Position(nx - x, ny - y), &chainMoves, chainMoves.size() - 1);
 					}
