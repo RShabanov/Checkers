@@ -28,4 +28,5 @@ struct Board {
 	Figure* operator[](const Position&);
 
 	void changeTurn();
+	void changeGameState(GameState);
 };

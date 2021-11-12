@@ -51,11 +51,11 @@ Moves Man::possibleMoves(const Board& board) const {
 
 	if (!chainMoves.empty()) {
 		std::sort(chainMoves.begin(), chainMoves.end(), comparator);
-		return chainMoves;
+		return std::move(chainMoves);
 	}
 	else {
 		std::sort(oneStepMoves.begin(), oneStepMoves.end(), comparator);
-		return oneStepMoves;
+		return std::move(oneStepMoves);
 	}
 }
 

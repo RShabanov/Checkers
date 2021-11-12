@@ -21,7 +21,7 @@ class Checkers {
 	std::vector<Position> getBestMove(Color color);
 	void simulateMove(Board* board, Position position, const std::vector<Position>& move);
 
-	std::pair<double, Board> minimax(const Board& board, int depth, bool max);
+	std::pair<double, Board> minimax(Board& board, int depth, bool max);
 
 	Board createBoard(const Board& board) const;
 

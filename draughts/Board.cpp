@@ -5,7 +5,7 @@ bool Board::isEmpty(char x, char y) const {
 }
 
 double Board::score() const {
-	return black.size() - white.size();
+	return white.size() - black.size();
 }
 
 Figure* Board::operator[](const Position& position) {
@@ -18,4 +18,8 @@ Figure* Board::operator[](const Position& position) {
 
 void Board::changeTurn() {
 	state.turnColor = state.turnColor == Color::WHITE ? Color::BLACK : Color::WHITE;
+}
+
+void Board::changeGameState(GameState _state) {
+	state.state = _state;
 }

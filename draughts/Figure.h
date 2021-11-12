@@ -24,6 +24,7 @@ public:
 	Color getColor() const;
 
 	const Position& getPosition() const;
+	void setPosition(char, char);
 	char getX() const;
 	char getY() const;
 };

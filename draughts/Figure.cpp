@@ -9,6 +9,10 @@ const Position& Figure::getPosition() const {
 	return position;
 }
 
+void Figure::setPosition(char x, char y) {
+	position.set(x, y);
+}
+
 char Figure::getX() const {
 	return position.getX();
 }
