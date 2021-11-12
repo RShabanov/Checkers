@@ -36,13 +36,13 @@ void Position::set(char _x, char _y) {
 }
 
 void Position::setX(char _x) {
-	if (_x < 0 || _x > 7)
+	if (_x < 0 || _x >= BOARD_SIZE)
 		throw PositionException();
 	x = _x;
 }
 
 void Position::setY(char _y) {
-	if (_y < 0 || _y > 7)
+	if (_y < 0 || _y >= BOARD_SIZE)
 		throw PositionException();
 	y = _y;
 }
@@ -68,7 +68,7 @@ std::ostream& operator<<(std::ostream& out, const Position& pos) {
 
 std::istream& operator>>(std::istream& in, Position& pos) {
 	char _x, _y;
-	in >> _x >> _y;
+	in >> _y >> _x;
 
 	pos = Position(_x, _y);
 	return in;

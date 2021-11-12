@@ -19,7 +19,7 @@ bool Board::onBoard(const Position& pos) const {
 }
 
 double Board::score() const {
-	return white.size() - black.size() + whiteQueenN * 0.5 - blackQueenN * 0.5;
+	return double(white.size()) - double(black.size()) + whiteQueenN * 0.5 - blackQueenN * 0.5;
 }
 
 int Board::getBlackQueenN() const {
@@ -80,4 +80,46 @@ std::pair<bool, Position> Board::between(const Position& from, const Position& t
 	}
 
 	return { false, Position(0, 0) };
+}
+
+void Board::printHistory(std::ostream& out) const {
+	out << (state.turnColor == Color::WHITE ? " White: " : " Black: ");
+	for (size_t i = 0; i < history.size() - 1; i++)
+		out << history[i] << " -> ";
+	out << history.back() << std::endl;
+}
+
+std::ostream& operator<<(std::ostream& out, const Board& board) {
+	out << "   ";
+	for (int i = 0; i < BOARD_SIZE; i++)
+		out << "+---";
+	out << "+" << std::endl;
+
+	for (int x = 0; x < BOARD_SIZE; x++) {
+		out << " " << BOARD_SIZE - x << " | ";
+		for (int y = 0; y < BOARD_SIZE; y++) {
+			char s = ' ';
+
+			if (!board.isEmpty(y, BOARD_SIZE - 1 - x)) {
+				if (board.data[y][BOARD_SIZE - 1 - x]->isQueen())
+					s = board.data[y][BOARD_SIZE - 1 - x]->getColor() == Color::WHITE ? 'W' : 'B';
+				else
+					s = board.data[y][BOARD_SIZE - 1 - x]->getColor() == Color::WHITE ? 'w' : 'b';
+			}
+
+			out << s << " | ";
+		}
+		out << "\n";
+		out << "   ";
+		for (int i = 0; i < BOARD_SIZE; i++)
+			out << "+---";
+		out << "+" << std::endl;
+	}
+
+	out << "    ";
+	for (int i = 0; i < BOARD_SIZE; i++)
+		out << " " << char('A' + i) << "  ";
+	out << std::endl;
+
+	return out;
 }

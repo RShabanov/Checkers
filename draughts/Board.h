@@ -51,4 +51,7 @@ public:
 		const Position& from,
 		const Position& to,
 		Color target) const;
+
+	friend std::ostream& operator<<(std::ostream&, const Board&);
+	void printHistory(std::ostream&) const;
 };

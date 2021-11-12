@@ -64,11 +64,21 @@ void Checkers::run(Color _turnColor) {
 
 	auto checkers = (board.state.turnColor == Color::BLACK) ? &board.white : &board.black;
 
+	std::cout << board << std::endl;
+
 	while (board.state.state == GameState::STILL_PLAYING) {
 		auto [score, newBoard] = minimax(board, 2, board.state.turnColor == Color::WHITE);
 
 		board = std::move(newBoard);
 		history.emplace_back(board.history);
+
+		// FOR DEBUG
+
+		system("cls");
+		std::cout << board << std::endl;
+		board.printHistory(std::cout);
+
+		///////////////////
 
 		board.changeTurn();
 	}
