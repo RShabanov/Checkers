@@ -1,5 +1,4 @@
 #include "Checkers.h"
-#include "Man.h"
 
 Checkers::Checkers(const std::string& filename) {
 	fromFile(filename);
@@ -20,6 +19,12 @@ void Checkers::fromFile(const std::string& filename) {
 
 	Figure* figure = nullptr;
 
+	// responsable for placement of figures:
+	// -1 - undefined
+	// 0 - even
+	// 1 - odd
+	char placementState = -1;
+
 	while (!fin.eof()) {
 		std::string buff;
 		getline(fin, buff);
@@ -32,6 +37,10 @@ void Checkers::fromFile(const std::string& filename) {
 				figure = dynamic_cast<Figure*>(new Man(pos, Color::WHITE));
 				whiteCheckers.emplace_back(std::shared_ptr<Figure>(figure));
 				board[pos.getX()][pos.getY()] = figure;
+
+				if (placementState == -1) placementState = (pos.getY() + pos.getX()) % 2;
+				else if (placementState != (pos.getY() + pos.getX()) % 2)
+					throw CheckersException();
 			}
 		}
 		else if (std::regex_match(buff, regexMatch, blackRegex)) {
@@ -42,6 +51,10 @@ void Checkers::fromFile(const std::string& filename) {
 				figure = dynamic_cast<Figure*>(new Man(pos, Color::BLACK));
 				blackCheckers.emplace_back(std::shared_ptr<Figure>(figure));
 				board[pos.getX()][pos.getY()] = figure;
+
+				if (placementState == -1) placementState = (pos.getY() + pos.getX()) % 2;
+				else if (placementState != (pos.getY() + pos.getX()) % 2)
+					throw CheckersException();
 			}
 		}
 	}
@@ -53,9 +66,12 @@ void Checkers::run(Color turnColor) {
 	//Moves moves;
 
 	while (true) {
-		break;
+		Man* mptr = dynamic_cast<Man*>(&*std::move(whiteCheckers[1]));
+		Figure* qptr = dynamic_cast<Figure*>(new Queen(std::move(*mptr)));
+		whiteCheckers[1].reset(qptr);
+
 		if (turnColor == Color::WHITE) {
-			whiteCheckers[0]->possibleMoves(board);
+			whiteCheckers[1]->possibleMoves(board);
 		}
 		else {
 

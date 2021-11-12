@@ -22,6 +22,5 @@ int main() {
 
 	game.run(firstColor == 'W' ? Color::WHITE : Color::BLACK);
 
-
 	return 0;
 }

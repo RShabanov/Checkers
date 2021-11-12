@@ -1,9 +1,11 @@
 White: 2
 B2
 G1
-Black: 5
+Black: 7
 C3
 E5
 G3
 G5
 G7
+F2
+B6

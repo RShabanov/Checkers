@@ -1,6 +1,8 @@
 #pragma once
 #include "Figure.h"
 #include "Color.h"
+#include "Man.h"
+#include "Queen.h"
 
 #include <vector>
 #include <fstream>
