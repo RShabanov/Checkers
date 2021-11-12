@@ -69,6 +69,8 @@ std::pair<bool, Position> Board::between(const Position& from, const Position& t
 			char nx = from.getX() + step * signX,
 				ny = from.getY() + step * signY;
 
+			if (nx == to.getX() && ny == to.getY()) break;
+
 			if (onBoard(nx, ny) &&
 				!isEmpty(nx, ny) &&
 				data[nx][ny]->getColor() == target) {

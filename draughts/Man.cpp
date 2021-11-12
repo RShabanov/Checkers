@@ -92,7 +92,7 @@ void Man::eatMove(
 				nx += x;
 				ny += y;
 
-				if (board.isEmpty(nx, ny)) {
+				if (board.onBoard(nx, ny) && board.isEmpty(nx, ny)) {
 					if (finishBranch) {
 						finishBranch = false;
 

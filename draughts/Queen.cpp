@@ -72,9 +72,10 @@ Moves Queen::getPossibleAttacks(Board& board, const Position& pos) const {
 									attacks.emplace_back(std::vector<Position>(possibleMovesFrom.size(), attackPosition));
 
 									for (size_t i = startIdx; i < possibleMovesFrom.size(); i++) {
+										auto possibleMovesIdx = startIdx > 0 ? i % startIdx : i;
 										attacks[i].insert(attacks[i].end(),
-											possibleMovesFrom[i % startIdx].begin(),
-											possibleMovesFrom[i % startIdx].end());
+											possibleMovesFrom[possibleMovesIdx].begin(),
+											possibleMovesFrom[possibleMovesIdx].end());
 									}
 								}
 
