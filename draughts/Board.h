@@ -21,6 +21,7 @@ struct Board {
 	std::array<std::array<Figure*, BOARD_SIZE>, BOARD_SIZE> data{ nullptr };
 	std::vector<std::shared_ptr<Figure>> black, white;
 	State state;
+	std::vector<Position> history;
 
 	bool isEmpty(char x, char y) const;
 	double score() const;

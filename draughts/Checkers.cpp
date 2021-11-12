@@ -65,18 +65,17 @@ void Checkers::fromFile(const std::string& filename) {
 
 void Checkers::run(Color _turnColor) {
 	board.state.turnColor = _turnColor;
-	//Moves moves;
+
 	auto checkers = (board.state.turnColor == Color::BLACK) ? &board.white : &board.black;
 
 	while (board.state.state == GameState::STILL_PLAYING) {
 		auto [score, newBoard] = minimax(board, 3, board.state.turnColor == Color::WHITE);
 
 		board = std::move(newBoard);
+		history.emplace_back(board.history);
 
 		board.changeTurn();
-		checkers = (board.state.turnColor == Color::BLACK) ? &board.white : &board.black;
 	}
-
 }
 
 void Checkers::save(const std::string& filename) const {
@@ -84,11 +83,11 @@ void Checkers::save(const std::string& filename) const {
 
 	if (!fout.is_open()) throw CheckersException();
 
-	for (size_t i = 0; i < moves.size(); i++) {
-		for (size_t moveIdx = 0; moveIdx < moves[i].size() - 1; moveIdx++) {
-			fout << moves[i][moveIdx] << " -> ";
+	for (size_t i = 0; i < history.size(); i++) {
+		for (size_t moveIdx = 0; moveIdx < history[i].size() - 1; moveIdx++) {
+			fout << history[i][moveIdx] << " -> ";
 		}
-		fout << moves[i].back() << std::endl;
+		fout << history[i].back() << std::endl;
 	}
 
 	fout.close();
@@ -103,19 +102,22 @@ std::vector<Board> Checkers::getAllMoves(const Board& board, Color color) {
 
 			auto tempBoard = createBoard(board);
 
+			tempBoard.state.state = GameState::STILL_PLAYING;
+			tempBoard.state.turnColor = figure->getColor();
+
+			tempBoard.history.emplace_back(figure->getPosition());
 			simulateMove(&tempBoard, figure->getPosition(), move);
+
 			moves.emplace_back(std::move(tempBoard));
 		}
 	}
 	return std::move(moves);
 }
 
-std::vector<Position> Checkers::getBestMove(Color color) {
-	return std::vector<Position>();
-}
-
 void Checkers::simulateMove(Board* board, Position position, const std::vector<Position>& move) {
-	auto* checkers = board->data[position.getX()][position.getY()]->getColor() == Color::WHITE ? &board->black : &board->white;
+	auto removeBlackColor = board->data[position.getX()][position.getY()]->getColor() == Color::WHITE;
+
+	auto* checkers = removeBlackColor ? &board->black : &board->white;
 	auto px = position.getX(), py = position.getY();
 
 	for (const auto& step : move) {
@@ -139,26 +141,39 @@ void Checkers::simulateMove(Board* board, Position position, const std::vector<P
 		}
 		else {
 			if (mx == 0) {
+				for (size_t i = 0; i < board->black.size(); i++) {
+					if (&*(board->black)[i] == board->data[mx][my]) {
+						Figure* queen = dynamic_cast<Figure*>(new Queen(board->black[i]->getPosition(), board->black[i]->getColor()));
+						board->black[i].reset(queen);
+						board->data[mx][my] = queen;
 
+						break;
+					}
+				}
 			}
 		}
 
 		auto oy = (my > py) ? py + ((my - py) >> 1) : my + ((py - my) >> 1);
 		auto ox = (mx > px) ? px + ((mx - px) >> 1) : mx + ((px - mx) >> 1);
 
-		size_t i = 0;
-		for (i; i < checkers->size(); i++) {
-			if (&*(*checkers)[i] == board->data[ox][oy]) {
-				break;
+		if (abs(px - mx) + abs(py - my) > 2) {
+			size_t i = 0;
+			for (i; i < checkers->size(); i++) {
+				if (&*(*checkers)[i] == board->data[ox][oy]) {
+					break;
+				}
 			}
+
+			board->data[ox][oy] = nullptr;
+			(*checkers)[i].swap((*checkers).back());
+			checkers->pop_back();
+
+			if (checkers->empty())
+				board->state.state = removeBlackColor ? GameState::WHITE_WON : GameState::BLACK_WON;
 		}
-
-		board->data[ox][oy] = nullptr;
-		(*checkers)[i].swap((*checkers).back());
-		checkers->pop_back();
-
 		px = mx;
 		py = my;
+		board->history.emplace_back(std::move(step));
 	}
 }
 
@@ -190,7 +205,7 @@ std::pair<double, Board> Checkers::minimax(Board& board, int depth, bool max) {
 		auto moves = getAllMoves(board, Color::BLACK);
 		for (auto& newBoard : moves) {
 			auto [score, position] = minimax(newBoard, depth - 1, true);
-			minScore = minScore > score ? minScore : score;
+			minScore = minScore < score ? minScore : score;
 
 			if (minScore == score) bestMove = std::move(newBoard);
 

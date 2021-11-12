@@ -5,7 +5,7 @@ using namespace std;
 
 int main() {
 	// TODO: add file via CLI args
-	Checkers game("input.txt");
+	Checkers game("input2.txt");
 	
 	char firstColor;
 
@@ -21,6 +21,7 @@ int main() {
 	}
 
 	game.run(firstColor == 'W' ? Color::WHITE : Color::BLACK);
+	game.save();
 
 	return 0;
 }

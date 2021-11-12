@@ -15,10 +15,9 @@ class CheckersException : public std::exception {};
 
 class Checkers {
 	Board board{ nullptr };
-	Moves moves;
+	Moves history;
 
 	std::vector<Board> getAllMoves(const Board& board, Color color);
-	std::vector<Position> getBestMove(Color color);
 	void simulateMove(Board* board, Position position, const std::vector<Position>& move);
 
 	std::pair<double, Board> minimax(Board& board, int depth, bool max);
