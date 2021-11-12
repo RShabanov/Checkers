@@ -4,16 +4,16 @@ Man::Man(const Position& position, Color color)
 	: Figure(position, color) {}
 
 Moves Man::possibleMoves(const Board& board) const {
-	Moves moves;
-	bool hasEatChain = false;
+	Moves chainMoves, oneStepMoves;
 
 	for (int x = -1; x < 2; x += 2) {
-		for (int y = -1; y < 2; y += 2) {
-			int nx = position.getX() + x,
-				ny = position.getY() + y;
+		int nx = position.getX() + x;
+		if (nx < 0 || nx >= BOARD_SIZE) continue;
 
-			if (nx < 0 || nx >= BOARD_SIZE ||
-				ny < 0 || ny >= BOARD_SIZE)
+		for (int y = -1; y < 2; y += 2) {
+			int	ny = position.getY() + y;
+
+			if (ny < 0 || ny >= BOARD_SIZE)
 				continue;
 
 			// if the current cell is not empty
@@ -25,36 +25,38 @@ Moves Man::possibleMoves(const Board& board) const {
 					ny += y;
 
 					if (board[nx][ny] == nullptr) {
-						moves.emplace_back(std::vector<Position>(1, Position(nx, ny)));
-						eatMove(board, Position(nx, ny), Position(nx - x, ny - y), &moves, moves.size() - 1);
-
-						hasEatChain = true;
+						chainMoves.emplace_back(std::vector<Position>(1, Position(nx, ny)));
+						eatMove(board, Position(nx, ny), Position(nx - x, ny - y), &chainMoves, chainMoves.size() - 1);
 					}
 				}
 			}
-			else {
+			// if we have something to kill
+			// we've got to kill it
+			else if (chainMoves.empty()) {
 				// since the whites are below the black ones
 				if ((color == Color::WHITE && y > 0) ||
 					(color == Color::BLACK && y < 0))
 					continue;
 
-				hasEatChain = false;
-				moves.emplace_back(std::vector<Position>(1, Position(nx, ny)));
+				oneStepMoves.emplace_back(std::vector<Position>(1, Position(nx, ny)));
 			}
 		}
 	}
 
-	if (hasEatChain) {
-		moves.erase(std::remove_if(
-			moves.begin(), moves.end(),
-			[](const std::vector<Position>& chain) {
-				return chain.size() == 1;
-			}),
-			moves.end()
-				);
-	}
+	auto comparator = [](
+		const std::vector<Position>& lhs,
+		const std::vector<Position>& rhs) {
+			return lhs.size() > rhs.size();
+	};
 
-	return moves;
+	if (!chainMoves.empty()) {
+		std::sort(chainMoves.begin(), chainMoves.end(), comparator);
+		return chainMoves;
+	}
+	else {
+		std::sort(oneStepMoves.begin(), oneStepMoves.end(), comparator);
+		return oneStepMoves;
+	}
 }
 
 void Man::eatMove(
@@ -68,12 +70,13 @@ void Man::eatMove(
 	bool finishBranch = false;
 
 	for (int x = -1; x < 2; x += 2) {
-		for (int y = -1; y < 2; y += 2) {
-			int nx = current.getX() + x,
-				ny = current.getY() + y;
+		int nx = current.getX() + x;
+		if (nx < 0 || nx >= BOARD_SIZE) continue;
 
-			if (nx < 0 || nx >= BOARD_SIZE ||
-				ny < 0 || ny >= BOARD_SIZE ||
+		for (int y = -1; y < 2; y += 2) {
+			int	ny = current.getY() + y;
+
+			if (ny < 0 || ny >= BOARD_SIZE ||
 				Position(nx, ny) == opponent)
 				continue;
 
