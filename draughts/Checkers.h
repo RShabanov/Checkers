@@ -15,6 +15,10 @@ class Checkers {
 	Board board{ nullptr };
 	std::vector<std::shared_ptr<Figure>> blackCheckers, whiteCheckers;
 	Moves moves;
+	Color turnColor;
+
+	void move(Position, std::vector<Position>&);
+	int score() const;
 
 public:
 	explicit Checkers(const std::string& filename);

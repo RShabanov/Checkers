@@ -62,7 +62,8 @@ void Checkers::fromFile(const std::string& filename) {
 	fin.close();
 }
 
-void Checkers::run(Color turnColor) {
+void Checkers::run(Color _turnColor) {
+	turnColor = _turnColor;
 	//Moves moves;
 
 	while (true) {
@@ -90,6 +91,43 @@ void Checkers::save(const std::string& filename) const {
 
 	if (!fout.is_open()) throw CheckersException();
 
+	for (size_t i = 0; i < moves.size(); i++) {
+		for (size_t moveIdx = 0; moveIdx < moves[i].size() - 1; moveIdx++) {
+			fout << moves[i][moveIdx] << " -> ";
+		}
+		fout << moves[i].back() << std::endl;
+	}
 
 	fout.close();
+}
+
+void Checkers::move(Position position, std::vector<Position>& moves) {
+	auto* checkers = board[position.getX()][position.getY()]->getColor() == Color::WHITE ? &whiteCheckers : &blackCheckers;
+	auto px = position.getX(), py = position.getY();
+
+	for (const auto& move : moves) {
+		auto mx = move.getX(), my = move.getY();
+		board[mx][my] = board[px][py];
+		board[px][py] = nullptr;
+
+		auto oy = (my > py) ? py + ((my - py) >> 1) : my + ((py - my) >> 1);
+		auto ox = (mx > px) ? px + ((mx - px) >> 1) : mx + ((px - mx) >> 1);
+
+		size_t i = 0;
+		for (i; i < checkers->size(); i++) {
+			if (&*(*checkers)[i] == board[ox][oy]) {
+				break;
+			}
+		}
+
+		board[ox][oy] = nullptr;
+		(*checkers)[i].swap((*checkers).back());
+		checkers->pop_back();
+	}
+
+	this->moves.emplace_back(std::move(moves));
+}
+
+int Checkers::score() const {
+	return blackCheckers.size() - whiteCheckers.size();
 }
