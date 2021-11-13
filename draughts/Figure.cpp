@@ -1,8 +1,8 @@
 #include "Figure.h"
 
 Figure::Figure(const Position& _positon, Color _color)
-// поскольку нет конструктора по умолчанию для класса Position
-// необходимо написать так:
+// since there is no default constructor for Position class
+// we have to initialize position like this:
 	: position(_positon), color(_color) {}
 
 Color Figure::getColor() const { return color; }

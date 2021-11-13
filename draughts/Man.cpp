@@ -6,6 +6,10 @@ Man::Man(const Position& position, Color color)
 Moves Man::possibleMoves(const Board& board) const {
 	Moves chainMoves, oneStepMoves;
 
+	// checks neighbourhood:
+	// (-1, -1) . (-1, 1)
+	//	   .	o	 .
+	// ( 1,  1) . ( 1, 1)
 	for (int x = -1; x < 2; x += 2) {
 		int nx = position.getX() + x;
 		if (!board.onBoard(nx, 0)) continue;
@@ -19,11 +23,12 @@ Moves Man::possibleMoves(const Board& board) const {
 			// if the current cell is not empty
 			if (!board.isEmpty(nx, ny)) {
 
-				// if the cell after the current cell is empty
+				// if it is an opponent
 				if (board.data[nx][ny]->getColor() != color) {
 					nx += x;
 					ny += y;
 
+					// if the cell after the current cell is empty
 					if (board.onBoard(nx, ny) && 
 						board.isEmpty(nx, ny)) {
 						chainMoves.emplace_back(std::vector<Position>(1, Position(nx, ny)));
@@ -47,32 +52,27 @@ Moves Man::possibleMoves(const Board& board) const {
 		}
 	}
 
-	auto comparator = [](
-		const std::vector<Position>& lhs,
-		const std::vector<Position>& rhs) {
-			return lhs.size() > rhs.size();
-	};
-
-	if (!chainMoves.empty()) {
-		std::sort(chainMoves.begin(), chainMoves.end(), comparator);
-		return std::move(chainMoves);
-	}
-	else {
-		std::sort(oneStepMoves.begin(), oneStepMoves.end(), comparator);
-		return std::move(oneStepMoves);
-	}
+	// if we have kill chain
+	// we have to kill no matter what
+	if (!chainMoves.empty()) return std::move(chainMoves);
+	
+	return std::move(oneStepMoves);
 }
 
 void Man::eatMove(
 	const Board& board,
 	Position current,
-	Position opponent,
+	Position opponent, // opponent position (right between original figure position and current one
 	Moves* moves,
-	size_t idx
+	size_t idx // index of the current move
 ) const {
 	size_t sizeBefore = -1;
 	bool finishBranch = false;
 
+	// checks neighbourhood:
+	// (-1, -1) . (-1, 1)
+	//	   .	o	 .
+	// ( 1,  1) . ( 1, 1)
 	for (int x = -1; x < 2; x += 2) {
 		int nx = current.getX() + x;
 		if (!board.onBoard(nx, 0)) continue;
@@ -84,7 +84,7 @@ void Man::eatMove(
 				Position(nx, ny) == opponent)
 				continue;
 
-			// if there is a neighbor
+			// if there is a neighbour
 			if (!board.isEmpty(nx, ny) &&
 				board.data[nx][ny]->getColor() != color) {
 
@@ -92,11 +92,17 @@ void Man::eatMove(
 				ny += y;
 
 				if (board.onBoard(nx, ny) && board.isEmpty(nx, ny)) {
+
+					// if there is a crossroad
+					// we have to write one of the possible chains
 					if (finishBranch) {
 						finishBranch = false;
 
 						moves->emplace_back(std::vector<Position>(sizeBefore, current));
 						std::copy((*moves)[idx].begin(), (*moves)[idx].begin() + sizeBefore, moves->back().begin());
+
+						// since we add finished chain
+						// and we have another chain with another index
 						idx += 1;
 					}
 					sizeBefore = (*moves)[idx].size();

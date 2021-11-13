@@ -41,6 +41,10 @@ Moves Queen::possibleMoves(const Board& board) const {
 Moves Queen::getPossibleAttacks(Board& board, const Position& pos) const {
 	Moves attacks;
 
+	// checks neighbourhood:
+	// (-n, -n) . (-n, n)
+	//	   .	o	 .
+	// ( n,  n) . ( n, n)
 	for (int x = -1; x < 2; x += 2) {
 		for (int y = -1; y < 2; y += 2) {
 			int	ny = pos.getY() + y;
@@ -51,6 +55,8 @@ Moves Queen::getPossibleAttacks(Board& board, const Position& pos) const {
 				if (!board.isEmpty(nx, ny)) {
 					if (board.data[nx][ny]->getColor() == color) break;
 					else {
+						// if we found an opponent
+						// we have to kill it and since remove it
 						Position opponentPosition(nx, ny);
 						Figure* const tempOpponentStorage = board[opponentPosition];
 
@@ -62,19 +68,26 @@ Moves Queen::getPossibleAttacks(Board& board, const Position& pos) const {
 
 							if (board.isEmpty(nx, ny)) {
 								Position attackPosition(nx, ny);
-								board[opponentPosition] = nullptr;
+								board[opponentPosition] = nullptr; // "remove"
 
+								// continue kill chain if it is possible
 								auto possibleMovesFrom = getPossibleAttacks(board, attackPosition);
-								if (possibleMovesFrom.empty()) {
+
+								// nothing can be attacked from attackPosition
+								if (possibleMovesFrom.empty()) { 
 									attacks.emplace_back(std::vector<Position>(1, attackPosition));
 								}
 								else {
+									// otherwise we have different ways to kill
 									auto startIdx = attacks.size();
 
 									for (size_t i = startIdx; i < possibleMovesFrom.size(); i++) {
+										// add start position
 										attacks.emplace_back(std::vector<Position>(1, attackPosition));
 
 										auto possibleMovesIdx = startIdx > 0 ? i % startIdx : i;
+
+										// add the rest
 										attacks[i].insert(attacks[i].end(),
 											possibleMovesFrom[possibleMovesIdx].begin(),
 											possibleMovesFrom[possibleMovesIdx].end());
@@ -84,6 +97,9 @@ Moves Queen::getPossibleAttacks(Board& board, const Position& pos) const {
 							else break;
 						} while (true);
 
+						// since we don't copy board
+						// and we "remove" opponents
+						// we have to move it back
 						board[opponentPosition] = tempOpponentStorage;
 					}
 				}
@@ -98,6 +114,10 @@ Moves Queen::getPossibleAttacks(Board& board, const Position& pos) const {
 }
 
 bool Queen::canAttackFrom(const Board& board, const Position& from) const {
+	// checks neighbourhood:
+	// (-n, -n) . (-n, n)
+	//	   .	o	 .
+	// ( n,  n) . ( n, n)
 	for (int x = -1; x < 2; x += 2) {
 		for (int y = -1; y < 2; y += 2) {
 			int	ny = from.getY() + y;

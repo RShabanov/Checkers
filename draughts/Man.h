@@ -4,6 +4,7 @@
 #include <algorithm>
 
 class Man : public Figure {
+	// finds kill chains
 	void eatMove(const Board&, Position current, Position opponent, Moves*, size_t idx) const;
 
 public:

@@ -147,6 +147,7 @@
     <ClCompile Include="Man.cpp" />
     <ClCompile Include="Position.cpp" />
     <ClCompile Include="Queen.cpp" />
+    <ClCompile Include="State.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Man.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="Queen.h" />
+    <ClInclude Include="State.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

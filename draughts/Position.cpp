@@ -6,16 +6,7 @@ Position::Position(char _x, char _y) {
 }
 
 Position::Position(const std::string& pos) {
-	if (pos.size() != 2) throw PositionException();
-	x = toupper(pos.front());
-	if (x < 'A' || x > 'H')
-		throw PositionException();
-	x %= 'A';
-
-	y = pos.back();
-	if (y < '1' || y > '8')
-		throw PositionException();
-	y %= '1';
+	set(pos);
 }
 
 Position::Position(const Position& pos) {
@@ -33,6 +24,19 @@ char Position::getY() const { return y; }
 void Position::set(char _x, char _y) {
 	setX(_x);
 	setY(_y);
+}
+
+void Position::set(const std::string& pos) {
+	if (pos.size() != 2) throw PositionException();
+	x = toupper(pos.front());
+	if (x < 'A' || x > 'H')
+		throw PositionException();
+	x %= 'A';
+
+	y = pos.back();
+	if (y < '1' || y > '8')
+		throw PositionException();
+	y %= '1';
 }
 
 void Position::setX(char _x) {

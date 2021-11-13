@@ -19,6 +19,7 @@ public:
 	char getY() const;
 
 	void set(char _x, char _y);
+	void set(const std::string&);
 	void setX(char);
 	void setY(char);
 
