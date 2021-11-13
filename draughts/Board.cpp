@@ -19,6 +19,8 @@ bool Board::onBoard(const Position& pos) const {
 }
 
 double Board::score() const {
+	// if we won't convert to double and vector.size() returns unsigned value
+	// there can be moments when we will get overflow
 	return double(white.size()) - double(black.size()) + whiteQueenN * 0.5 - blackQueenN * 0.5;
 }
 
@@ -59,6 +61,7 @@ void Board::moveFigure(const Position& from, const Position& to) {
 	else throw BoardException();
 }
 
+// checks if there is an opponent between 2 points
 std::pair<bool, Position> Board::between(const Position& from, const Position& to, Color target) const {
 	if (onBoard(from) && onBoard(to) && !(from == to)) {
 		char signX = from.getX() > to.getX() ? -1 : 1;

@@ -3,20 +3,11 @@
 #include <exception>
 
 #include "Figure.h"
-
-enum class GameState : char {
-	BLACK_WON,
-	WHITE_WON,
-	STILL_PLAYING,
-};
-
-struct State {
-	Color turnColor;
-	GameState state;
-};
+#include "State.h"
 
 class BoardException : std::exception {};
 
+// since we copy boards we have to store game information
 struct Board {
 private:
 	int blackQueenN = 0, whiteQueenN = 0;
