@@ -32,7 +32,10 @@ public:
 	void fromFile(const std::string& filename);
 
 	void run(Color turnColor = Color::WHITE);
+	void runNMoves(unsigned int moveNumber, Color turnColor = Color::WHITE);
 
 	void save(const std::string& filename = "checkers-game.txt") const;
+
+	GameState state() const;
 };
 

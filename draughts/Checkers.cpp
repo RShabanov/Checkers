@@ -59,29 +59,47 @@ void Checkers::fromFile(const std::string& filename) {
 	fin.close();
 }
 
-void Checkers::run(Color _turnColor) {
-	board.state.turnColor = _turnColor;
+void Checkers::run(Color turnColor) {
+	runNMoves(-1, turnColor);
+}
+
+void Checkers::runNMoves(unsigned int moveNumber, Color turnColor) {
+	int depth = moveNumber + 1;
+
+	if (moveNumber == -1) depth = 4;
+
+	board.state.turnColor = turnColor;
 
 	auto checkers = (board.state.turnColor == Color::BLACK) ? &board.white : &board.black;
 
+	// FOR DEBUG
+	/*
 	std::cout << board << std::endl;
+	*/
 
 	while (board.state.state == GameState::STILL_PLAYING) {
-		auto [score, newBoard] = minimax(board, 2, board.state.turnColor == Color::WHITE);
+		auto [score, newBoard] = minimax(board, depth, board.state.turnColor == Color::WHITE);
 
 		board = std::move(newBoard);
 		history.emplace_back(board.history);
 
 		// FOR DEBUG
-
-		system("cls");
+		/*system("cls");
 		std::cout << board << std::endl;
-		board.printHistory(std::cout);
-
-		///////////////////
+		board.printHistory(std::cout);*/
 
 		board.changeTurn();
+
+		if (moveNumber != -1) {
+			if (moveNumber-- == 0) {
+				break;
+			}
+		}
 	}
+}
+
+GameState Checkers::state() const {
+	return board.state.state;
 }
 
 void Checkers::save(const std::string& filename) const {
@@ -159,7 +177,6 @@ void Checkers::simulateMove(Board* board, Position position, const std::vector<P
 
 		auto [hasOpponent, opponent] = board->between(step, position, removeBlackColor ? Color::BLACK : Color::WHITE);
 
-		// |x1 - x2| + |y1 - y2|
 		if (hasOpponent) {
 			size_t i = 0;
 			for (i; i < checkers->size(); i++) {
