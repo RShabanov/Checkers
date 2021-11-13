@@ -14,6 +14,15 @@
 
 class CheckersException : public std::exception {};
 
+// to check checkers placement
+// so there were no moments like
+// one figure is on A1 and another is on A2
+enum class CheckersPlacement : char {
+	UNDEFINED,
+	EVEN,
+	ODD
+};
+
 class Checkers {
 	Board board;
 	Moves history;
