@@ -5,6 +5,14 @@ Figure::Figure(const Position& _positon, Color _color)
 // we have to initialize position like this:
 	: position(_positon), color(_color) {}
 
+bool Figure::isWhite() const {
+	return color == Color::WHITE;
+}
+
+bool Figure::isBlack() const {
+	return !isWhite();
+}
+
 Color Figure::getColor() const { return color; }
 
 const Position& Figure::getPosition() const {

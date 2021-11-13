@@ -21,6 +21,8 @@ public:
 
 	virtual Moves possibleMoves(const Board&) const = 0;
 	virtual bool isQueen() const = 0;
+	bool isWhite() const;
+	bool isBlack() const;
 	Color getColor() const;
 
 	const Position& getPosition() const;
