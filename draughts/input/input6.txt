@@ -1,0 +1,5 @@
+White: 2
+F2
+B4
+Black: 1
+G3

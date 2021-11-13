@@ -1,0 +1,8 @@
+Black: 1
+A3
+White: 5
+B2
+C7
+E3
+E5
+G5
