@@ -3,9 +3,6 @@
 Queen::Queen(const Position& positon, Color color)
 	: Figure(positon, color) {}
 
-Queen::Queen(Man&& man)
-	: Figure(man) {}
-
 Moves Queen::possibleMoves(const Board& board) const {
 	Moves moves;
 
@@ -124,7 +121,6 @@ bool Queen::canAttackFrom(const Board& board, const Position& from) const {
 			int nx = from.getX() + x;
 
 			while (board.onBoard(nx, ny)) {
-
 				if (!board.isEmpty(nx, ny)) {
 					if (board.data[nx][ny]->getColor() == color) break;
 
