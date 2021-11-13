@@ -32,8 +32,6 @@ class Checkers {
 
 	std::pair<double, Board> minimax(Board& board, int depth, bool max);
 
-	Board createBoard(const Board& board) const;
-
 public:
 	explicit Checkers(const std::string& filename);
 	~Checkers() = default;

@@ -22,6 +22,7 @@ public:
 	std::vector<Position> history;
 
 	bool isEmpty(char x, char y) const;
+	bool isEmpty(const Position&) const;
 	bool onBoard(char x, char y) const;
 	bool onBoard(const Position&) const;
 	double score() const;
@@ -35,8 +36,6 @@ public:
 	void changeGameState(GameState);
 
 	void increaseQueen(Color _color);
-
-	void moveFigure(const Position& from, const Position& to);
 
 	std::pair<bool, Position> between(
 		const Position& from,

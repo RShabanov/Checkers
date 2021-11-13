@@ -78,9 +78,7 @@ void Checkers::runNMoves(unsigned int moveNumber, Color turnColor) {
 	auto checkers = (board.state.turnColor == Color::BLACK) ? &board.white : &board.black;
 
 	// FOR DEBUG
-	/*
-	std::cout << board << std::endl;
-	*/
+	/*std::cout << board << std::endl;*/
 
 	while (board.state.state == GameState::STILL_PLAYING) {
 		auto [score, newBoard] = minimax(board, depth, board.state.turnColor == Color::WHITE);
@@ -131,7 +129,7 @@ std::vector<Board> Checkers::getAllMoves(const Board& board, Color color) {
 	for (const auto& figure : *checkers) {
 		for (const auto& move : figure->possibleMoves(board)) {
 
-			auto tempBoard = createBoard(board);
+			auto tempBoard = boardCopy(board);
 			tempBoard.history.emplace_back(figure->getPosition());
 			
 			// makes move
@@ -145,66 +143,9 @@ std::vector<Board> Checkers::getAllMoves(const Board& board, Color color) {
 }
 
 void Checkers::simulateMove(Board* board, Position position, const std::vector<Position>& move) {
-	auto removeBlackColor = (*board)[position]->getColor() == Color::WHITE;
-
-	auto* checkers = removeBlackColor ? &board->black : &board->white;
-
 	for (const auto& step : move) {
-		board->moveFigure(position, step);
-
-		// checks if a figure becomes a queen
-		if ((*board)[step]->getColor() == Color::WHITE) {
-			if (step.getY() == BOARD_SIZE - 1) {
-				for (size_t i = 0; i < board->white.size(); i++) {
-					if (&*(board->white)[i] == (*board)[step]) {
-						Figure* queen = dynamic_cast<Figure*>(new Queen(board->white[i]->getPosition(), board->white[i]->getColor()));
-						board->white[i].reset(queen);
-						(*board)[step] = queen;
-						board->increaseQueen(Color::WHITE);
-
-						break;
-					}
-				}
-			}
-		}
-		else {
-			if (step.getY() == 0) {
-				for (size_t i = 0; i < board->black.size(); i++) {
-					if (&*(board->black)[i] == (*board)[step]) {
-						Figure* queen = dynamic_cast<Figure*>(new Queen(board->black[i]->getPosition(), board->black[i]->getColor()));
-						board->black[i].reset(queen);
-						(*board)[step] = queen;
-						board->increaseQueen(Color::BLACK);
-
-						break;
-					}
-				}
-			}
-		}
-
-		// checks if it is a kill move and returns position of killed figure 
-		auto [hasOpponent, opponent] = board->between(step, position, removeBlackColor ? Color::BLACK : Color::WHITE);
-
-		// if it is a kill move
-		if (hasOpponent) {
-			size_t i = 0;
-			for (i; i < checkers->size(); i++) {
-				if (&*(*checkers)[i] == (*board)[opponent]) {
-					break;
-				}
-			}
-
-			// removes killed figure
-			(*board)[opponent] = nullptr;
-			(*checkers)[i].swap((*checkers).back());
-			checkers->pop_back();
-
-			if (checkers->empty())
-				board->state.state = removeBlackColor ? GameState::WHITE_WON : GameState::BLACK_WON;
-		}
-
+		moveFigure(board, position, step);
 		position = step;
-		board->history.emplace_back(std::move(step));
 	}
 }
 
@@ -250,30 +191,4 @@ std::pair<double, Board> Checkers::minimax(Board& board, int depth, bool whiteTu
 			board.changeGameState(board.state.turnColor == Color::WHITE ? GameState::BLACK_WON : GameState::WHITE_WON);
 		return { minScore, std::move(bestMove) };
 	}
-}
-
-
-Board Checkers::createBoard(const Board& board) const {
-	Board newBoard(board.state, board.getBlackQueenN(), board.getWhiteQueenN());
-	auto checkers = &board.white;
-	auto newCheckers = &newBoard.white;
-
-	for (int i = 0; i < 2; i++) {
-		
-		for (const auto& figure : (*checkers)) {
-			Figure* ptr = nullptr;
-			if (figure->isQueen())
-				ptr = dynamic_cast<Figure*>(new Queen(figure->getPosition(), figure->getColor()));
-			else
-				ptr = dynamic_cast<Figure*>(new Man(figure->getPosition(), figure->getColor()));
-
-			newCheckers->emplace_back(std::shared_ptr<Figure>(ptr));
-			newBoard[figure->getPosition()] = ptr;
-		}
-
-		checkers = &board.black;
-		newCheckers = &newBoard.black;
-	}
-
-	return std::move(newBoard);
 }

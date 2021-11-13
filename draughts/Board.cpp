@@ -9,6 +9,11 @@ bool Board::isEmpty(char x, char y) const {
 	return data[x][y] == nullptr;
 }
 
+bool Board::isEmpty(const Position& position) const {
+	if (!onBoard(position)) throw BoardException();
+	return data[position.getX()][position.getY()] == nullptr;
+}
+
 bool Board::onBoard(char x, char y) const {
 	return x >= 0 && x < BOARD_SIZE 
 		&& y >= 0 && y < BOARD_SIZE;
@@ -50,15 +55,6 @@ void Board::changeGameState(GameState _state) {
 void Board::increaseQueen(Color _color) {
 	if (_color == Color::WHITE) whiteQueenN++;
 	else blackQueenN++;
-}
-
-void Board::moveFigure(const Position& from, const Position& to) {
-	if (onBoard(from) && onBoard(to)) {
-		(*this)[to] = (*this)[from];
-		(*this)[from] = nullptr;
-		(*this)[to]->setPosition(to);
-	}
-	else throw BoardException();
 }
 
 // checks if there is an opponent between 2 points
