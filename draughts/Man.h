@@ -7,7 +7,7 @@
 
 class Man : public Figure {
 	// finds kill chains
-	void eatMove(const Board&, Position current, Position opponent, Moves*, size_t idx) const;
+	void eatMove(const Board&, const Position& current, const Position& opponent, Moves*, size_t idx) const;
 	void queenMove(const Board&, const Position& current, Moves&) const;
 
 	bool onQueenPositionIf(const Board&, const Position&) const;
@@ -23,3 +23,4 @@ public:
 
 Board boardCopy(const Board&);
 void moveFigure(Board*, const Position& from, const Position& to);
+void killOpponent(Board*, const Position& opponentPosition, bool removeBlack);

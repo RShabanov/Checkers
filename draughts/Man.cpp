@@ -34,12 +34,12 @@ Moves Man::possibleMoves(const Board& board) const {
 						Position current(nx, ny), 
 								 opponentPosition(nx - x, ny - y);
 
+						chainMoves.emplace_back(std::vector<Position>(1, current));
+
 						if (onQueenPositionIf(board, current))
 							queenMove(board, current, chainMoves);
-						else {
-							chainMoves.emplace_back(std::vector<Position>(1, current));
+						else
 							eatMove(board, current, opponentPosition, &chainMoves, chainMoves.size() - 1);
-						}
 					}
 
 					nx -= x;
@@ -59,17 +59,27 @@ Moves Man::possibleMoves(const Board& board) const {
 		}
 	}
 
+	auto comparator = [](
+		const std::vector<Position>& lhs,
+		const std::vector<Position>& rhs) {
+			return lhs.size() < rhs.size();
+	};
+
 	// if we have kill chain
 	// we have to kill no matter what
-	if (!chainMoves.empty()) return std::move(chainMoves);
+	if (!chainMoves.empty()) {
+		std::sort(chainMoves.begin(), chainMoves.end(), comparator);
+		return std::move(chainMoves);
+	}
 	
+	std::sort(oneStepMoves.begin(), oneStepMoves.end(), comparator);
 	return std::move(oneStepMoves);
 }
 
 void Man::eatMove(
 	const Board& board,
-	Position current,
-	Position opponent, // opponent position (right between original figure position and current one
+	const Position& current,
+	const Position& opponent, // opponent position (right between original figure position and current one
 	Moves* moves,
 	size_t idx // index of the current move
 ) const {
@@ -99,7 +109,7 @@ void Man::eatMove(
 				ny += y;
 
 				if (board.onBoard(nx, ny) && board.isEmpty(nx, ny)) {
-
+					Position to(nx, ny), opponentPosition(nx - x, ny - y);
 					// if there is a crossroad
 					// we have to write one of the possible chains
 					if (finishBranch) {
@@ -113,9 +123,15 @@ void Man::eatMove(
 						idx += 1;
 					}
 					sizeBefore = (*moves)[idx].size();
+					(*moves)[idx].emplace_back(to);
 
-					(*moves)[idx].emplace_back(Position(nx, ny));
-					eatMove(board, Position(nx, ny), Position(nx - x, ny - y), moves, idx);
+					if (onQueenPositionIf(board, to))
+						queenMove(board, to, *moves);
+					else
+						eatMove(board, to, opponentPosition, moves, idx);
+
+					/*(*moves)[idx].emplace_back(to);
+					eatMove(board, to, opponentPosition, moves, idx);*/
 
 					finishBranch = true;
 				}
@@ -133,9 +149,11 @@ void Man::queenMove(const Board& board, const Position& current, Moves& chainMov
 	if (moves.empty())
 		chainMoves.emplace_back(std::vector<Position>(1, current));
 	else {
-		for (const auto& move : moves) {
-			chainMoves.emplace_back(std::vector<Position>(1, current));
-			chainMoves.back().insert(chainMoves.back().end(), move.begin(), move.end());
+		for (size_t moveIdx = 0; moveIdx < moves.size(); moveIdx++) {
+			chainMoves.back().insert(chainMoves.back().end(), moves[moveIdx].begin(), moves[moveIdx].end());
+
+			if (moveIdx != moves.size() - 1)
+				chainMoves.emplace_back(std::vector<Position>(1, current));
 		}
 	}
 }
@@ -184,25 +202,30 @@ void moveFigure(Board* _board, const Position& from, const Position& to) {
 	auto [hasOpponent, opponent] = board.between(to, from, removeBlackColor ? Color::BLACK : Color::WHITE);
 
 	// if it is a kill move
-	if (hasOpponent) {
-		checkers = removeBlackColor ? &board.black : &board.white;
-		size_t i = 0;
-		for (i; i < checkers->size(); i++) {
-			if (&*(*checkers)[i] == board[opponent]) {
-				break;
-			}
+	if (hasOpponent)
+		killOpponent(_board, opponent, removeBlackColor);
+	
+	board.history.emplace_back(to);
+}
+
+void killOpponent(Board* _board, const Position& opponentPosition, bool removeBlack) {
+	Board& board = *_board;
+
+	if (!board.onBoard(opponentPosition)) return;
+
+	auto checkers = removeBlack ? &board.black : &board.white;
+	size_t i = 0;
+	for (i; i < checkers->size(); i++) {
+		if (&*(*checkers)[i] == board[opponentPosition]) {
+			// kills an opponent
+			board[opponentPosition] = nullptr;
+			(*checkers)[i].swap((*checkers).back());
+			checkers->pop_back();
 		}
-
-		// removes killed figure
-		board[opponent] = nullptr;
-		(*checkers)[i].swap((*checkers).back());
-		checkers->pop_back();
-
-		if (checkers->empty())
-			board.changeGameState(removeBlackColor ? GameState::WHITE_WON : GameState::BLACK_WON);
 	}
 
-	board.history.emplace_back(to);
+	if (checkers->empty())
+		board.changeGameState(removeBlack ? GameState::WHITE_WON : GameState::BLACK_WON);
 }
 
 bool Man::isQueen() const {	return false; }
@@ -212,6 +235,7 @@ bool Man::onQueenPosition() const {
 		isBlack() && position.getY() == 0;
 }
 
+// deep copy of a given board
 Board boardCopy(const Board& board) {
 	Board newBoard(board.state, board.getBlackQueenN(), board.getWhiteQueenN());
 	auto checkers = &board.white;
