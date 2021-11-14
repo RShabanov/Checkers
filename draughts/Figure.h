@@ -19,7 +19,7 @@ public:
 	explicit Figure(const Position&, Color);
 	virtual ~Figure() = default;
 
-	virtual Moves possibleMoves(const Board&) const = 0;
+	virtual Moves possibleMoves(const Board&, bool onlyAttack = false) const = 0;
 	virtual bool isQueen() const = 0;
 	bool isWhite() const;
 	bool isBlack() const;

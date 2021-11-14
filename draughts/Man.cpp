@@ -3,7 +3,7 @@
 Man::Man(const Position& position, Color color)
 	: Figure(position, color) {}
 
-Moves Man::possibleMoves(const Board& board) const {
+Moves Man::possibleMoves(const Board& board, bool onlyAttack) const {
 	Moves chainMoves, oneStepMoves;
 
 	// checks neighbourhood:
@@ -34,12 +34,15 @@ Moves Man::possibleMoves(const Board& board) const {
 						Position current(nx, ny), 
 								 opponentPosition(nx - x, ny - y);
 
+						Board newBoard = boardCopy(board);
+						newBoard[opponentPosition] = nullptr;
+
 						chainMoves.emplace_back(std::vector<Position>(1, current));
 
-						if (onQueenPositionIf(board, current))
-							queenMove(board, current, chainMoves);
+						if (onQueenPositionIf(newBoard, current))
+							queenMove(newBoard, current, chainMoves);
 						else
-							eatMove(board, current, opponentPosition, &chainMoves, chainMoves.size() - 1);
+							eatMove(newBoard, current, opponentPosition, &chainMoves, chainMoves.size() - 1);
 					}
 
 					nx -= x;
@@ -48,7 +51,7 @@ Moves Man::possibleMoves(const Board& board) const {
 			}
 			// if we have something to kill
 			// we've got to kill it
-			else if (chainMoves.empty()) {
+			else if (chainMoves.empty() && !onlyAttack) {
 				// since the whites are below the black ones
 				if ((color == Color::WHITE && y < 0) ||
 					(color == Color::BLACK && y > 0))
@@ -68,16 +71,16 @@ Moves Man::possibleMoves(const Board& board) const {
 	// if we have kill chain
 	// we have to kill no matter what
 	if (!chainMoves.empty()) {
-		std::sort(chainMoves.begin(), chainMoves.end(), comparator);
+		//std::sort(chainMoves.begin(), chainMoves.end(), comparator);
 		return std::move(chainMoves);
 	}
 	
-	std::sort(oneStepMoves.begin(), oneStepMoves.end(), comparator);
+	//std::sort(oneStepMoves.begin(), oneStepMoves.end(), comparator);
 	return std::move(oneStepMoves);
 }
 
 void Man::eatMove(
-	const Board& board,
+	Board& board,
 	const Position& current,
 	const Position& opponent, // opponent position (right between original figure position and current one
 	Moves* moves,
@@ -125,13 +128,15 @@ void Man::eatMove(
 					sizeBefore = (*moves)[idx].size();
 					(*moves)[idx].emplace_back(to);
 
+					Figure* opponentTempStorage = board[opponentPosition];
+					board[opponentPosition] = nullptr;
+
 					if (onQueenPositionIf(board, to))
 						queenMove(board, to, *moves);
 					else
 						eatMove(board, to, opponentPosition, moves, idx);
 
-					/*(*moves)[idx].emplace_back(to);
-					eatMove(board, to, opponentPosition, moves, idx);*/
+					board[opponentPosition] = opponentTempStorage;
 
 					finishBranch = true;
 				}
@@ -140,20 +145,19 @@ void Man::eatMove(
 	}
 }
 
-void Man::queenMove(const Board& board, const Position& current, Moves& chainMoves) const {
-	Board newBoard = boardCopy(board);
+void Man::queenMove(Board& board, const Position& current, Moves& chainMoves) const {
+	moveFigure(&board, position, current);
 
-	moveFigure(&newBoard, position, current);
-
-	auto moves = newBoard[current]->possibleMoves(newBoard);
+	auto moves = board[current]->possibleMoves(board, true);
 	if (moves.empty())
 		chainMoves.emplace_back(std::vector<Position>(1, current));
 	else {
-		for (size_t moveIdx = 0; moveIdx < moves.size(); moveIdx++) {
+		std::vector<Position> baseChain(chainMoves.back().begin(), chainMoves.back().end());
+		for (size_t moveIdx = 0; moveIdx < moves.size(); moveIdx++) {		
 			chainMoves.back().insert(chainMoves.back().end(), moves[moveIdx].begin(), moves[moveIdx].end());
 
 			if (moveIdx != moves.size() - 1)
-				chainMoves.emplace_back(std::vector<Position>(1, current));
+				chainMoves.emplace_back(baseChain);
 		}
 	}
 }

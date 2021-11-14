@@ -30,7 +30,8 @@ class Checkers {
 	std::vector<Board> getAllMoves(const Board& board, Color color);
 	void simulateMove(Board* board, Position position, const std::vector<Position>& move);
 
-	std::pair<double, Board> minimax(Board& board, int depth, bool max);
+	std::pair<double, Board> minimax(Board& board, int depth, bool whiteTurn);
+	std::pair<double, Board> alphaBeta(Board& board, int depth, double aplha, double beta, bool whiteTurn);
 
 public:
 	explicit Checkers(const std::string& filename);

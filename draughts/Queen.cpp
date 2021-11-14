@@ -3,14 +3,14 @@
 Queen::Queen(const Position& positon, Color color)
 	: Figure(positon, color) {}
 
-Moves Queen::possibleMoves(const Board& board) const {
+Moves Queen::possibleMoves(const Board& board, bool onlyAttack) const {
 	Moves moves;
 
 	moves = getPossibleAttacks(const_cast<Board&>(board), position);
 
 	// at least, if don't have any possible attacks
 	// we can jump to cell where we can attack from
-	if (moves.empty()) {
+	if (moves.empty() && !onlyAttack) {
 		Moves possibleKillMoves;
 		auto maxValidStep = BOARD_SIZE - (position.getX() > position.getY() ? position.getX() : position.getY());
 
@@ -26,15 +26,15 @@ Moves Queen::possibleMoves(const Board& board) const {
 					
 					Position from(nx, ny);
 					moves.emplace_back(std::vector<Position>(1, from));
-					if (canAttackFrom(board, from)) {
+					/*if (canAttackFrom(board, from)) {
 						possibleKillMoves.emplace_back(std::vector<Position>(1, from));
-					}
+					}*/
 				}
 			}
 		}
 
-		if (!possibleKillMoves.empty())
-			moves = std::move(possibleKillMoves);
+		/*if (!possibleKillMoves.empty())
+			moves = std::move(possibleKillMoves);*/
 	}
 
 	auto comparator = [](
@@ -43,7 +43,7 @@ Moves Queen::possibleMoves(const Board& board) const {
 			return lhs.size() > rhs.size();
 	};
 
-	std::sort(moves.begin(), moves.end(), comparator);
+	//std::sort(moves.begin(), moves.end(), comparator);
 
 	return std::move(moves);
 }
@@ -135,7 +135,8 @@ bool Queen::canAttackFrom(const Board& board, const Position& from) const {
 
 			while (board.onBoard(nx, ny)) {
 				if (!board.isEmpty(nx, ny)) {
-					if (board.data[nx][ny]->getColor() == color) break;
+					if (board.data[nx][ny]->getColor() == color ||
+						board.data[nx][ny]->isQueen()) break;
 
 					nx += x;
 					ny += y;

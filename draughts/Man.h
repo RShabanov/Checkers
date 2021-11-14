@@ -7,8 +7,8 @@
 
 class Man : public Figure {
 	// finds kill chains
-	void eatMove(const Board&, const Position& current, const Position& opponent, Moves*, size_t idx) const;
-	void queenMove(const Board&, const Position& current, Moves&) const;
+	void eatMove(Board&, const Position& current, const Position& opponent, Moves*, size_t idx) const;
+	void queenMove(Board&, const Position& current, Moves&) const;
 
 	bool onQueenPositionIf(const Board&, const Position&) const;
 
@@ -16,7 +16,7 @@ public:
 	explicit Man(const Position&, Color);
 	virtual ~Man() = default;
 
-	Moves possibleMoves(const Board&) const override;
+	Moves possibleMoves(const Board&, bool onlyAttack = false) const override;
 	bool isQueen() const override;
 	bool onQueenPosition() const;
 };

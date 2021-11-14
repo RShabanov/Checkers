@@ -78,21 +78,24 @@ void Checkers::runNMoves(unsigned int moveNumber, Color turnColor) {
 	auto checkers = (board.state.turnColor == Color::BLACK) ? &board.white : &board.black;
 
 	// FOR DEBUG
-	std::cout << board << std::endl;
-	std::cin.get();
+	/*std::cout << board << std::endl;
+	std::cin.get();*/
 
 	while (board.state.state == GameState::STILL_PLAYING) {
 		auto [score, newBoard] = minimax(board, depth, board.state.turnColor == Color::WHITE);
+		//auto [score, newBoard] = alphaBeta(board, depth, 
+		//	-std::numeric_limits<double>::infinity(), // alpha
+		//	std::numeric_limits<double>::infinity(), // beta
+		//	board.state.turnColor == Color::WHITE);
 
 		board = std::move(newBoard);
 		history.emplace_back(board.history);
 
 		// FOR DEBUG
-		std::cin.get();
-
+		/*std::cin.get();
 		system("cls");
 		std::cout << board << std::endl;
-		board.printHistory(std::cout);
+		board.printHistory(std::cout);*/
 
 		board.changeTurn();
 
@@ -126,7 +129,10 @@ void Checkers::save(const std::string& filename) const {
 // in spite of function name 
 // it returns boards where these moves are done
 std::vector<Board> Checkers::getAllMoves(const Board& board, Color color) {
-	auto* checkers = (color == Color::WHITE) ? &board.white : &board.black;
+	bool whiteOpponent = color != Color::WHITE;
+	auto opponentSize = whiteOpponent ? board.white.size() : board.black.size();
+	auto* checkers = whiteOpponent ? &board.black : &board.white;
+	bool haveKillMove = false;
 	std::vector<Board> moves;
 
 	for (const auto& figure : *checkers) {
@@ -138,10 +144,33 @@ std::vector<Board> Checkers::getAllMoves(const Board& board, Color color) {
 			// makes move
 			simulateMove(&tempBoard, figure->getPosition(), move);
 
+			auto newOpponentSize = whiteOpponent ? tempBoard.white.size() : tempBoard.black.size();
+			if (opponentSize != newOpponentSize)
+				haveKillMove = true;
+
 			// add this move to all moves
 			moves.emplace_back(std::move(tempBoard));
 		}
 	}
+
+	// if we have kill moves we have to choose them
+	if (haveKillMove) {
+		auto removeStart = std::remove_if(moves.begin(), moves.end(),
+			[opponentSize, whiteOpponent](const Board& _board) {
+				return opponentSize == (whiteOpponent ? _board.white.size() : _board.black.size());
+			});
+
+		moves.erase(removeStart, moves.end());
+	}
+
+	auto comparator = [](
+		const Board& lhs,
+		const Board& rhs) {
+			return lhs.score() == rhs.score() ? 
+				lhs.history.size() > rhs.history.size() : 
+				lhs.score() > rhs.score();
+	};
+	std::sort(moves.begin(), moves.end(), comparator);
 	return std::move(moves);
 }
 
@@ -191,6 +220,56 @@ std::pair<double, Board> Checkers::minimax(Board& board, int depth, bool whiteTu
 				bestMove = std::move(newBoard);
 				minScore = score;
 			}
+		}
+
+		// if moves empty an opponent wins
+		if (moves.empty())
+			board.changeGameState(bestMove.state.turnColor == Color::WHITE ? GameState::BLACK_WON : GameState::WHITE_WON);
+		return { minScore, std::move(bestMove) };
+	}
+}
+
+std::pair<double, Board> Checkers::alphaBeta(Board& board, int depth, double alpha, double beta, bool whiteTurn) {
+	if (depth == 0 || board.state.state != GameState::STILL_PLAYING) {
+		return { board.score(), board };
+	}
+
+	Board bestMove = board;
+
+	if (whiteTurn) {
+		double maxScore = -std::numeric_limits<double>::infinity();
+		auto moves = getAllMoves(board, Color::WHITE);
+		for (auto& newBoard : moves) {
+			auto [score, _] = alphaBeta(newBoard, depth - 1, alpha, beta, false);
+
+			if (maxScore < score) {
+				bestMove = std::move(newBoard);
+				maxScore = score;
+			}
+
+			alpha = alpha > score ? alpha : score;
+			if (beta <= alpha) break;
+		}
+
+		// if moves empty an opponent wins
+		if (moves.empty())
+			board.changeGameState(bestMove.state.turnColor == Color::WHITE ? GameState::BLACK_WON : GameState::WHITE_WON);
+		return { maxScore, std::move(bestMove) };
+	}
+	else {
+		double minScore = std::numeric_limits<double>::infinity();
+
+		auto moves = getAllMoves(board, Color::BLACK);
+		for (auto& newBoard : moves) {
+			auto [score, _] = alphaBeta(newBoard, depth - 1, alpha, beta, true);
+
+			if (minScore > score) {
+				bestMove = std::move(newBoard);
+				minScore = score;
+			}
+
+			beta = beta < score ? beta : score;
+			if (beta <= alpha) break;
 		}
 
 		// if moves empty an opponent wins
