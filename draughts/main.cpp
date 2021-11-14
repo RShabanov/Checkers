@@ -8,7 +8,7 @@ Color firstColor();
 
 int main() {
 	try {
-		constexpr unsigned int movesNumber = 2;
+		constexpr unsigned int movesNumber = 3;
 
 		string filename;
 		cout << "Enter input filename: ";
@@ -16,8 +16,8 @@ int main() {
 
 		Checkers game(filename);
 
-		game.runNMoves(movesNumber, firstColor()); // play only N moves
-		//game.run(firstColor()); // play the whole game
+		//game.runNMoves(movesNumber, firstColor()); // play only N moves
+		game.run(firstColor()); // play the whole game
 
 		// if after game.runNMoves the game is not over
 		// we have to tell it
@@ -52,6 +52,7 @@ Color firstColor() {
 
 		system("cls");
 		cout << "Please, pay attention! Let's try again" << endl;;
+		cin.ignore(numeric_limits<streamsize>::max(), '\n'); // clear input buffer
 	}
 
 	return Color(firstColor == 'W' ? Color::WHITE : Color::BLACK);
