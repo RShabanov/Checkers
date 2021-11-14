@@ -1,2 +1,4 @@
-A3 -> C1 -> F4 -> D6 -> B8
-G5 -> H6
+The whitesstarts.
+B2 -> C3
+A3 -> B2
+C3 -> A1

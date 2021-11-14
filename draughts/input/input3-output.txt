@@ -1,1 +1,8 @@
-B2 -> D4
+The blacksstarts.
+C3 -> A1
+F2 -> G3
+A1 -> B2
+G3 -> F4
+B2 -> F6
+F4 -> E5
+F6 -> D4
