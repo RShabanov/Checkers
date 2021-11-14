@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{25eac03c-5075-4896-b07a-cf3d005a0c3b}</ProjectGuid>
-    <RootNamespace>draughts</RootNamespace>
+    <ProjectGuid>{3839b9de-6512-4d37-b506-3e96680d502d}</ProjectGuid>
+    <RootNamespace>checkers</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -88,7 +88,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,23 +139,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Board.cpp" />
     <ClCompile Include="Figure.cpp" />
-    <ClCompile Include="Checkers.cpp" />
+    <ClCompile Include="GameBoard.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Man.cpp" />
     <ClCompile Include="Position.cpp" />
-    <ClCompile Include="Queen.cpp" />
     <ClCompile Include="State.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Board.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Figure.h" />
-    <ClInclude Include="Checkers.h" />
-    <ClInclude Include="Man.h" />
+    <ClInclude Include="GameBoard.h" />
     <ClInclude Include="Position.h" />
-    <ClInclude Include="Queen.h" />
     <ClInclude Include="State.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

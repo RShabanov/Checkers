@@ -1,18 +1,12 @@
 #include "Position.h"
 
-Position::Position(char _x, char _y) {
-	x = _x % BOARD_SIZE;
-	y = _y % BOARD_SIZE;
-}
+Position::Position(char _x, char _y)
+	: x(_x), y(_y) {}
 
-Position::Position(const std::string& pos) {
-	set(pos);
-}
+Position::Position(const std::string& pos) { set(pos); }
 
-Position::Position(const Position& pos) {
-	x = pos.x;
-	y = pos.y;
-}
+Position::Position(const Position& pos) 
+	: x(pos.x), y(pos.y) {}
 
 Position::Position(Position&& pos)
 	: x(pos.x), y(pos.y) {}
@@ -39,17 +33,9 @@ void Position::set(const std::string& pos) {
 	y %= '1';
 }
 
-void Position::setX(char _x) {
-	if (_x < 0 || _x >= BOARD_SIZE)
-		throw PositionException();
-	x = _x;
-}
+void Position::setX(char _x) { x = _x; }
 
-void Position::setY(char _y) {
-	if (_y < 0 || _y >= BOARD_SIZE)
-		throw PositionException();
-	y = _y;
-}
+void Position::setY(char _y) { y = _y; }
 
 bool Position::operator==(const Position& o) const {
 	return x == o.x && y == o.y;
@@ -61,19 +47,15 @@ Position& Position::operator=(const Position& o) {
 	return *this;
 }
 
-int Position::distanceTo(const Position& o) const {
-	return abs(x - o.x) + abs(y - o.y);
-}
-
 std::ostream& operator<<(std::ostream& out, const Position& pos) {
 	out << char('A' + pos.x) << pos.y + 1;
 	return out;
 }
 
-std::istream& operator>>(std::istream& in, Position& pos) {
-	char _x, _y;
-	in >> _y >> _x;
+std::istream& operator>>(std::istream& in, Position& position) {
+	std::string pos;
+	in >> pos;
 
-	pos = Position(_x, _y);
+	position.set(pos);
 	return in;
 }

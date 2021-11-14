@@ -14,59 +14,50 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Исходные файлы\Figures">
-      <UniqueIdentifier>{ac8efb8d-d7b2-444e-af85-9d939483ca1a}</UniqueIdentifier>
+      <UniqueIdentifier>{49a4c771-f570-41b7-a066-0060e87d8e63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Board">
+      <UniqueIdentifier>{b107a974-5875-4683-8341-c587cc37b37d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Board">
+      <UniqueIdentifier>{427c409a-d475-4479-ab59-e8ec32f1f2ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Figures">
+      <UniqueIdentifier>{807a21a6-995b-44d4-bf8d-1ff2b1aef1d6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="State.cpp">
+      <Filter>Исходные файлы\Board</Filter>
+    </ClCompile>
     <ClCompile Include="Position.cpp">
-      <Filter>Исходные файлы</Filter>
+      <Filter>Исходные файлы\Board</Filter>
     </ClCompile>
     <ClCompile Include="Figure.cpp">
       <Filter>Исходные файлы\Figures</Filter>
     </ClCompile>
-    <ClCompile Include="Man.cpp">
-      <Filter>Исходные файлы\Figures</Filter>
-    </ClCompile>
-    <ClCompile Include="Queen.cpp">
-      <Filter>Исходные файлы\Figures</Filter>
-    </ClCompile>
-    <ClCompile Include="Checkers.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="Board.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="State.cpp">
-      <Filter>Исходные файлы</Filter>
+    <ClCompile Include="GameBoard.cpp">
+      <Filter>Исходные файлы\Board</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Figure.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Position.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Man.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Queen.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="Color.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Checkers.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Board.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="State.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Файлы заголовков\Board</Filter>
+    </ClInclude>
+    <ClInclude Include="Position.h">
+      <Filter>Файлы заголовков\Board</Filter>
+    </ClInclude>
+    <ClInclude Include="Figure.h">
+      <Filter>Файлы заголовков\Figures</Filter>
+    </ClInclude>
+    <ClInclude Include="GameBoard.h">
+      <Filter>Файлы заголовков\Board</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

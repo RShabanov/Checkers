@@ -1,8 +1,6 @@
 #include "Figure.h"
 
 Figure::Figure(const Position& _positon, Color _color)
-// since there is no default constructor for Position class
-// we have to initialize position like this:
 	: position(_positon), color(_color) {}
 
 bool Figure::isWhite() const {
@@ -19,6 +17,14 @@ const Position& Figure::getPosition() const {
 	return position;
 }
 
+char Figure::getX() const {
+	return position.getX();
+}
+
+char Figure::getY() const {
+	return position.getY();
+}
+
 void Figure::setPosition(char x, char y) {
 	position.set(x, y);
 }
@@ -27,10 +33,10 @@ void Figure::setPosition(const Position& pos) {
 	position = pos;
 }
 
-char Figure::getX() const {
-	return position.getX();
+void Figure::setX(char _x) {
+	position.setX(_x);
 }
 
-char Figure::getY() const {
-	return position.getY();
+void Figure::setY(char _y) {
+	position.setY(_y);
 }

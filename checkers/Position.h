@@ -1,11 +1,12 @@
 #pragma once
 #include <iostream>
+#include <vector>
+#include <string>
 #include <cstring>
-
-constexpr char BOARD_SIZE = 8;
 
 class PositionException : std::exception {};
 
+// Position class DOES NOT check if it is valid position
 class Position {
 	char x, y;
 public:
@@ -26,9 +27,9 @@ public:
 	bool operator==(const Position&) const;
 	Position& operator=(const Position&);
 
-	int distanceTo(const Position&) const;
-
 	friend std::ostream& operator<<(std::ostream&, const Position&);
 	friend std::istream& operator>>(std::istream&, Position&);
 };
 
+using Move = std::vector<Position>;
+using Moves = std::vector<Move>;
