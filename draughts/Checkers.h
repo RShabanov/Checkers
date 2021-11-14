@@ -26,6 +26,7 @@ enum class CheckersPlacement : char {
 class Checkers {
 	Board board;
 	Moves history;
+	Color firstMove;
 
 	std::vector<Board> getAllMoves(const Board& board, Color color);
 	void simulateMove(Board* board, Position position, const std::vector<Position>& move);

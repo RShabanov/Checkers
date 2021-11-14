@@ -1,6 +1,7 @@
 #include "Checkers.h"
 
-Checkers::Checkers(const std::string& filename) {
+Checkers::Checkers(const std::string& filename)
+	: firstMove(Color::WHITE) {
 	fromFile(filename);
 	board.state = { Color::WHITE, GameState::STILL_PLAYING };
 }
@@ -73,6 +74,7 @@ void Checkers::runNMoves(unsigned int moveNumber, Color turnColor) {
 
 	if (moveNumber == -1) depth = 4;
 
+	firstMove = turnColor;
 	board.state.turnColor = turnColor;
 
 	auto checkers = (board.state.turnColor == Color::BLACK) ? &board.white : &board.black;
@@ -116,6 +118,7 @@ void Checkers::save(const std::string& filename) const {
 
 	if (!fout.is_open()) throw CheckersException();
 
+	fout << "The " << (firstMove == Color::WHITE ? "whites" : "blacks") << "starts." << std::endl;
 	for (size_t i = 0; i < history.size(); i++) {
 		for (size_t moveIdx = 0; moveIdx < history[i].size() - 1; moveIdx++) {
 			fout << history[i][moveIdx] << " -> ";
