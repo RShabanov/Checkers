@@ -78,7 +78,8 @@ void Checkers::runNMoves(unsigned int moveNumber, Color turnColor) {
 	auto checkers = (board.state.turnColor == Color::BLACK) ? &board.white : &board.black;
 
 	// FOR DEBUG
-	/*std::cout << board << std::endl;*/
+	std::cout << board << std::endl;
+	std::cin.get();
 
 	while (board.state.state == GameState::STILL_PLAYING) {
 		auto [score, newBoard] = minimax(board, depth, board.state.turnColor == Color::WHITE);
@@ -87,9 +88,11 @@ void Checkers::runNMoves(unsigned int moveNumber, Color turnColor) {
 		history.emplace_back(board.history);
 
 		// FOR DEBUG
-		/*system("cls");
+		std::cin.get();
+
+		system("cls");
 		std::cout << board << std::endl;
-		board.printHistory(std::cout);*/
+		board.printHistory(std::cout);
 
 		board.changeTurn();
 
@@ -165,14 +168,16 @@ std::pair<double, Board> Checkers::minimax(Board& board, int depth, bool whiteTu
 		auto moves = getAllMoves(board, Color::WHITE);
 		for (auto& newBoard : moves) {
 			auto [score, _] = minimax(newBoard, depth - 1, false);
-			maxScore = maxScore > score ? maxScore : score;
 
-			if (maxScore == score) bestMove = std::move(newBoard);
+			if (maxScore < score) {
+				bestMove = std::move(newBoard);
+				maxScore = score;
+			}
 		}
 
 		// if moves empty an opponent wins
 		if (moves.empty())
-			board.changeGameState(board.state.turnColor == Color::WHITE ? GameState::BLACK_WON : GameState::WHITE_WON);
+			board.changeGameState(bestMove.state.turnColor == Color::WHITE ? GameState::BLACK_WON : GameState::WHITE_WON);
 		return { maxScore, std::move(bestMove) };
 	}
 	else {
@@ -181,14 +186,16 @@ std::pair<double, Board> Checkers::minimax(Board& board, int depth, bool whiteTu
 		auto moves = getAllMoves(board, Color::BLACK);
 		for (auto& newBoard : moves) {
 			auto [score, _] = minimax(newBoard, depth - 1, true);
-			minScore = minScore < score ? minScore : score;
 
-			if (minScore == score) bestMove = std::move(newBoard);
+			if (minScore > score) {
+				bestMove = std::move(newBoard);
+				minScore = score;
+			}
 		}
 
 		// if moves empty an opponent wins
 		if (moves.empty())
-			board.changeGameState(board.state.turnColor == Color::WHITE ? GameState::BLACK_WON : GameState::WHITE_WON);
+			board.changeGameState(bestMove.state.turnColor == Color::WHITE ? GameState::BLACK_WON : GameState::WHITE_WON);
 		return { minScore, std::move(bestMove) };
 	}
 }

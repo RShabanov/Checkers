@@ -62,7 +62,7 @@ Moves Man::possibleMoves(const Board& board) const {
 	auto comparator = [](
 		const std::vector<Position>& lhs,
 		const std::vector<Position>& rhs) {
-			return lhs.size() < rhs.size();
+			return lhs.size() > rhs.size();
 	};
 
 	// if we have kill chain
