@@ -62,20 +62,11 @@ Moves Man::possibleMoves(const Board& board, bool onlyAttack) const {
 		}
 	}
 
-	auto comparator = [](
-		const std::vector<Position>& lhs,
-		const std::vector<Position>& rhs) {
-			return lhs.size() > rhs.size();
-	};
-
 	// if we have kill chain
 	// we have to kill no matter what
-	if (!chainMoves.empty()) {
-		//std::sort(chainMoves.begin(), chainMoves.end(), comparator);
+	if (!chainMoves.empty())
 		return std::move(chainMoves);
-	}
 	
-	//std::sort(oneStepMoves.begin(), oneStepMoves.end(), comparator);
 	return std::move(oneStepMoves);
 }
 
