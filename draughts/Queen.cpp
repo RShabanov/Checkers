@@ -11,7 +11,6 @@ Moves Queen::possibleMoves(const Board& board, bool onlyAttack) const {
 	// at least, if don't have any possible attacks
 	// we can jump to cell where we can attack from
 	if (moves.empty() && !onlyAttack) {
-		Moves possibleKillMoves;
 		auto maxValidStep = BOARD_SIZE - (position.getX() > position.getY() ? position.getX() : position.getY());
 
 		for (int signX = -1; signX < 2; signX += 2) {
@@ -20,30 +19,14 @@ Moves Queen::possibleMoves(const Board& board, bool onlyAttack) const {
 					int nx = position.getX() + step * signX,
 						ny = position.getY() + step * signY;
 
-					if (!board.onBoard(nx, ny) ||
-						(!board.isEmpty(nx, ny) &&
-						board.data[nx][ny]->getColor() == color)) break;
-					
-					Position from(nx, ny);
-					moves.emplace_back(std::vector<Position>(1, from));
-					/*if (canAttackFrom(board, from)) {
-						possibleKillMoves.emplace_back(std::vector<Position>(1, from));
-					}*/
+					if (!board.onBoard(nx, ny) || !board.isEmpty(nx, ny)) 
+						break;
+
+					moves.emplace_back(std::vector<Position>(1, Position(nx, ny)));
 				}
 			}
 		}
-
-		/*if (!possibleKillMoves.empty())
-			moves = std::move(possibleKillMoves);*/
 	}
-
-	auto comparator = [](
-		const std::vector<Position>& lhs,
-		const std::vector<Position>& rhs) {
-			return lhs.size() > rhs.size();
-	};
-
-	//std::sort(moves.begin(), moves.end(), comparator);
 
 	return std::move(moves);
 }
