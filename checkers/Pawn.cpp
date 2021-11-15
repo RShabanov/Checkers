@@ -18,7 +18,7 @@ Moves Pawn::possibleMoves(const GameBoard& board, const Position& from, bool onl
 			int nx = from.getX() + x;
 			if (!board.onBoard(ny, nx)) continue;
 
-			Position to(nx, ny);
+			Position to(ny, nx);
 
 			// if the current cell is not empty
 			if (!board.isEmpty(to)) {
@@ -26,14 +26,12 @@ Moves Pawn::possibleMoves(const GameBoard& board, const Position& from, bool onl
 				if (board[to]->getColor() == color) continue;
 
 				// if it is an opponent
-				nx += x;
-				ny += y;
+				to.add(y, x);
 
 				// if the cell after the current cell is empty
-				if (board.onBoard(nx, ny) &&
-					board.isEmpty(nx, ny)) {
-					to.set(ny, nx);
-					Position opponentPosition(nx - x, ny - y);
+				if (board.onBoard(to) &&
+					board.isEmpty(to)) {
+					Position opponentPosition(ny - y, nx - x);
 
 					killMoves.emplace_back(std::vector<Position>(1, to));
 
@@ -47,15 +45,12 @@ Moves Pawn::possibleMoves(const GameBoard& board, const Position& from, bool onl
 					// otherwise it generates a kill chain as a king
 					auto moves = newBoard[to]->possibleMoves(newBoard, to, newBoard[to]->isKing());
 					
-					// TODO: implement functions: copyBoard & movePiece
 					for (size_t moveIdx = 0; moveIdx < moves.size(); moveIdx++) {
 						killMoves.back().insert(killMoves.back().end(), moves[moveIdx].begin(), moves[moveIdx].end());
 						if (moveIdx != moves.size() - 1)
 							killMoves.emplace_back(std::vector<Position>(1, to));
 					}
 				}
-
-				nx -= x;
 			}
 			// if we have something to kill
 			// we've got to kill it
