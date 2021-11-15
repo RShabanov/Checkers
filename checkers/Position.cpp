@@ -37,6 +37,19 @@ void Position::setX(char _x) { x = _x; }
 
 void Position::setY(char _y) { y = _y; }
 
+void Position::add(char _y, char _x) {
+	x += _x;
+	y += _y;
+}
+
+void Position::addX(char _x) {
+	x += _x;
+}
+
+void Position::addY(char _y) {
+	y += _y;
+}
+
 bool Position::operator==(const Position& o) const {
 	return x == o.x && y == o.y;
 }

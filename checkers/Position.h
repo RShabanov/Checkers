@@ -24,6 +24,10 @@ public:
 	void setX(char);
 	void setY(char);
 
+	void add(char _y, char _x);
+	void addX(char);
+	void addY(char);
+
 	bool operator==(const Position&) const;
 	Position& operator=(const Position&);
 
