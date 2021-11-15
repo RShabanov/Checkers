@@ -11,11 +11,10 @@ Moves Queen::possibleMoves(const Board& board, bool onlyAttack) const {
 	// at least, if don't have any possible attacks
 	// we can jump to cell where we can attack from
 	if (moves.empty() && !onlyAttack) {
-		auto maxValidStep = BOARD_SIZE - (position.getX() > position.getY() ? position.getX() : position.getY());
 
 		for (int signX = -1; signX < 2; signX += 2) {
 			for (int signY = -1; signY < 2; signY += 2) {
-				for (int step = 1; step <= maxValidStep; step++) {
+				for (int step = 1; step <= BOARD_SIZE; step++) {
 					int nx = position.getX() + step * signX,
 						ny = position.getY() + step * signY;
 
