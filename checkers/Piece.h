@@ -1,7 +1,8 @@
 #pragma once
 #include "Color.h"
 #include "Position.h"
-#include "GameBoard.h"
+
+class GameBoard;
 
 class Piece {
 protected:
@@ -14,6 +15,8 @@ public:
 
 	virtual Moves possibleMoves(const GameBoard&, bool onlyAttack = false) const = 0;
 	virtual bool isKing() const = 0;
+	//virtual void move()
+
 	bool isWhite() const;
 	bool isBlack() const;
 	Color getColor() const;
@@ -28,5 +31,6 @@ public:
 	void setY(char);
 };
 
-Color pieceColor(const Piece* const);
-bool isKing(const Piece* const);
+// so inherited class can use
+GameBoard&& copyBoard(const GameBoard&);
+void movePiece(GameBoard*, const Position& from, const Position& to);

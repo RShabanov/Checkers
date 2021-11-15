@@ -3,10 +3,9 @@
 using namespace std;
 
 int main() {
-	GameBoard board{ (State()) };
+	/*GameBoard board{ (State()) };
 	
-	cout << board << endl;
-	
-	
+	cout << board << endl;*/
+
 	return 0;
 }

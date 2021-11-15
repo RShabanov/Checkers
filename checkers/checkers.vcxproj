@@ -139,16 +139,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Figure.cpp" />
+    <ClCompile Include="Pawn.cpp" />
+    <ClCompile Include="Piece.cpp" />
     <ClCompile Include="GameBoard.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Pieces.cpp" />
     <ClCompile Include="Position.cpp" />
     <ClCompile Include="State.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Color.h" />
-    <ClInclude Include="Figure.h" />
+    <ClInclude Include="Pawn.h" />
+    <ClInclude Include="Piece.h" />
     <ClInclude Include="GameBoard.h" />
+    <ClInclude Include="Pieces.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="State.h" />
   </ItemGroup>

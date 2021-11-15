@@ -13,16 +13,16 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Исходные файлы\Figures">
-      <UniqueIdentifier>{49a4c771-f570-41b7-a066-0060e87d8e63}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Исходные файлы\Board">
       <UniqueIdentifier>{b107a974-5875-4683-8341-c587cc37b37d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Файлы заголовков\Board">
       <UniqueIdentifier>{427c409a-d475-4479-ab59-e8ec32f1f2ba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Файлы заголовков\Figures">
+    <Filter Include="Исходные файлы\Pieces">
+      <UniqueIdentifier>{49a4c771-f570-41b7-a066-0060e87d8e63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Pieces">
       <UniqueIdentifier>{807a21a6-995b-44d4-bf8d-1ff2b1aef1d6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -36,10 +36,16 @@
     <ClCompile Include="Position.cpp">
       <Filter>Исходные файлы\Board</Filter>
     </ClCompile>
-    <ClCompile Include="Figure.cpp">
-      <Filter>Исходные файлы\Figures</Filter>
+    <ClCompile Include="Piece.cpp">
+      <Filter>Исходные файлы\Pieces</Filter>
     </ClCompile>
     <ClCompile Include="GameBoard.cpp">
+      <Filter>Исходные файлы\Board</Filter>
+    </ClCompile>
+    <ClCompile Include="Pawn.cpp">
+      <Filter>Исходные файлы\Pieces</Filter>
+    </ClCompile>
+    <ClCompile Include="Pieces.cpp">
       <Filter>Исходные файлы\Board</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,10 +59,16 @@
     <ClInclude Include="Position.h">
       <Filter>Файлы заголовков\Board</Filter>
     </ClInclude>
-    <ClInclude Include="Figure.h">
-      <Filter>Файлы заголовков\Figures</Filter>
+    <ClInclude Include="Piece.h">
+      <Filter>Файлы заголовков\Pieces</Filter>
     </ClInclude>
     <ClInclude Include="GameBoard.h">
+      <Filter>Файлы заголовков\Board</Filter>
+    </ClInclude>
+    <ClInclude Include="Pawn.h">
+      <Filter>Файлы заголовков\Board</Filter>
+    </ClInclude>
+    <ClInclude Include="Pieces.h">
       <Filter>Файлы заголовков\Board</Filter>
     </ClInclude>
   </ItemGroup>

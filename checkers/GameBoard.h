@@ -1,17 +1,13 @@
 #pragma once
 #include "Position.h"
-#include "Color.h"
+#include "Pieces.h"
 #include "State.h"
 
 #include <array>
+#include <vector>
 #include <exception>
 
 constexpr int BOARD_SIZE = 8;
-
-class Piece; // solves class usage problem
-
-Color pieceColor(const Piece* const);
-bool isKing(const Piece* const);
 
 class GameBoardException : public std::exception {};
 
@@ -22,9 +18,8 @@ public:
 
 	explicit GameBoard(
 		const State& _state = State(),
-		const Board& _board = { nullptr },
-		const Move& _lastMove = {}
-	);
+		const Pieces& _pieces = Pieces(),
+		const Move& _lastMove = {});
 	explicit GameBoard(const GameBoard&);
 	explicit GameBoard(GameBoard&&);
 	~GameBoard() = default;
@@ -53,10 +48,10 @@ public:
 	friend std::ostream& operator<<(std::ostream&, const GameBoard&);
 	void printHistory(std::ostream&) const;
 
-	GameBoard&& copy() const;
-
 private:
 	Board board;
+	Pieces pieces;
+
 	State state;
 	Move lastMove;
 };

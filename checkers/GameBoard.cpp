@@ -1,7 +1,10 @@
 #include "GameBoard.h"
 
-GameBoard::GameBoard(const State& _state, const Board& _board, const Move& _lastMove)
-	: state(_state), lastMove(_lastMove), board(_board) {}
+GameBoard::GameBoard(
+	const State& _state,
+	const Pieces& _pieces, 
+	const Move& _lastMove)
+	: state(_state), lastMove(_lastMove), pieces(_pieces) {}
 
 GameBoard::GameBoard(const GameBoard& gameBoard) 
 	: state(gameBoard.state), board(gameBoard.board), lastMove(gameBoard.lastMove) {}
@@ -38,20 +41,20 @@ void GameBoard::changeGameState(GameState gameState) {
 
 void GameBoard::increaseKing(Color _color) {
 	if (_color == Color::WHITE)
-		state.whiteKingN++;
-	else state.blackKingN++;
+		pieces.whiteKingN++;
+	else pieces.blackKingN++;
 }
 
 double GameBoard::score() const {
-	return double(state.white) - double(state.black) + double(state.blackKingN) * 0.5 - double(state.whiteKingN) * 0.5;
+	return double(pieces.white.size()) - double(pieces.black.size()) + double(pieces.blackKingN) * 0.5 - double(pieces.whiteKingN) * 0.5;
 }
 
 char GameBoard::getBlackKingN() const {
-	return state.blackKingN;
+	return pieces.blackKingN;
 }
 
 char GameBoard::getWhiteKingN() const {
-	return state.whiteKingN;
+	return pieces.whiteKingN;
 }
 
 Piece*& GameBoard::operator[](const Position& position) {
@@ -85,10 +88,6 @@ void GameBoard::printHistory(std::ostream& out) const {
 	out << lastMove.back() << std::endl;
 }
 
-GameBoard&& GameBoard::copy() const {
-	return std::move(GameBoard(state, board, lastMove));
-}
-
 std::ostream& operator<<(std::ostream& out, const GameBoard& gameBoard) {
 	out.width(4);
 	out.fill(' ');
@@ -108,10 +107,9 @@ std::ostream& operator<<(std::ostream& out, const GameBoard& gameBoard) {
 
 			if (!gameBoard.isEmpty(y, BOARD_SIZE - 1 - x)) {
 				// direct access to object field not to use extra checks
-				s = pieceColor(gameBoard.board[y][x]) == Color::WHITE ? 'w' : 'b';
+				s = gameBoard.board[y][x]->isWhite() ? 'w' : 'b';
 
-				// since GameBoard DOES NOT see King class
-				if (isKing(gameBoard.board[y][x]))
+				if (gameBoard.board[y][x]->isKing())
 					s = std::toupper(s);
 			}
 
