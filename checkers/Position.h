@@ -19,7 +19,7 @@ public:
 	char getX() const;
 	char getY() const;
 
-	void set(char _x, char _y);
+	void set(char _y, char _x);
 	void set(const std::string&);
 	void setX(char);
 	void setY(char);

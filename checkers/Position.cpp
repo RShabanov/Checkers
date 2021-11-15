@@ -15,7 +15,7 @@ char Position::getX() const { return x; }
 
 char Position::getY() const { return y; }
 
-void Position::set(char _x, char _y) {
+void Position::set(char _y, char _x) {
 	setX(_x);
 	setY(_y);
 }
