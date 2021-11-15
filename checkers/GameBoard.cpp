@@ -1,7 +1,13 @@
 #include "GameBoard.h"
 
-GameBoard::GameBoard(const State& _state, const Move& _lastMove, const Board& _board) 
+GameBoard::GameBoard(const State& _state, const Board& _board, const Move& _lastMove)
 	: state(_state), lastMove(_lastMove), board(_board) {}
+
+GameBoard::GameBoard(const GameBoard& gameBoard) 
+	: state(gameBoard.state), board(gameBoard.board), lastMove(gameBoard.lastMove) {}
+
+GameBoard::GameBoard(GameBoard&& gameBoard)
+	: state(gameBoard.state), board(gameBoard.board), lastMove(gameBoard.lastMove) {}
 
 bool GameBoard::isEmpty(char y, char x) const {
 	if (!onBoard(y, x))
@@ -48,11 +54,11 @@ char GameBoard::getWhiteQueenN() const {
 	return state.whiteQueenN;
 }
 
-Figure*& GameBoard::operator[](const Position& position) {
+Piece*& GameBoard::operator[](const Position& position) {
 	return (*this)[position.getY()][position.getX()];
 }
 
-const Figure* const& GameBoard::operator[](const Position& position) const {
+const Piece* const& GameBoard::operator[](const Position& position) const {
 	return (*this)[position.getY()][position.getX()];
 }
 
@@ -77,6 +83,10 @@ void GameBoard::printHistory(std::ostream& out) const {
 	for (size_t i = 0; i < lastMove.size() - 1; i++)
 		out << lastMove[i] << " -> ";
 	out << lastMove.back() << std::endl;
+}
+
+GameBoard&& GameBoard::copy() const {
+	return GameBoard(state, board, lastMove);
 }
 
 std::ostream& operator<<(std::ostream& out, const GameBoard& gameBoard) {

@@ -1,5 +1,5 @@
 #pragma once
-#include "Figure.h"
+#include "Piece.h"
 #include "State.h"
 
 #include <array>
@@ -11,14 +11,16 @@ class GameBoardException : public std::exception {};
 
 class GameBoard {
 public:
-	using BoardRow = std::array<Figure*, BOARD_SIZE>;
+	using BoardRow = std::array<Piece*, BOARD_SIZE>;
 	using Board = std::array<BoardRow, BOARD_SIZE>;
 
 	explicit GameBoard(
 		const State& _state = State(),
-		const Move& _history = {},
-		const Board& _board = { nullptr }
+		const Board& _board = { nullptr },
+		const Move& _lastMove = {}
 	);
+	explicit GameBoard(const GameBoard&);
+	explicit GameBoard(GameBoard&&);
 	~GameBoard() = default;
 
 	bool isEmpty(char y, char x) const;
@@ -37,13 +39,15 @@ public:
 	char getBlackQueenN() const;
 	char getWhiteQueenN() const;
 
-	Figure*& operator[](const Position&);
-	const Figure* const& operator[](const Position&) const;
+	Piece*& operator[](const Position&);
+	const Piece* const& operator[](const Position&) const;
 	BoardRow& operator[](char y);
 	const BoardRow& operator[](char y) const;
 
 	friend std::ostream& operator<<(std::ostream&, const GameBoard&);
 	void printHistory(std::ostream&) const;
+
+	GameBoard&& copy() const;
 
 private:
 	Board board;
