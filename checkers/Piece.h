@@ -1,20 +1,19 @@
 #pragma once
 #include "Color.h"
 #include "Position.h"
+#include "GameBoard.h"
 
-class GameBoard; // solves class usage problem
-
-class Figure {
+class Piece {
 protected:
 	Color color;
 	Position position;
 
 public:
-	explicit Figure(const Position&, Color);
-	virtual ~Figure() = default;
+	explicit Piece(const Position&, Color);
+	virtual ~Piece() = default;
 
 	virtual Moves possibleMoves(const GameBoard&, bool onlyAttack = false) const = 0;
-	virtual bool isQueen() const = 0;
+	virtual bool isKing() const = 0;
 	bool isWhite() const;
 	bool isBlack() const;
 	Color getColor() const;
@@ -29,3 +28,5 @@ public:
 	void setY(char);
 };
 
+Color pieceColor(const Piece* const);
+bool isKing(const Piece* const);

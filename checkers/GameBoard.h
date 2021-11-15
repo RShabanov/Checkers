@@ -1,11 +1,17 @@
 #pragma once
-#include "Piece.h"
+#include "Position.h"
+#include "Color.h"
 #include "State.h"
 
 #include <array>
 #include <exception>
 
-constexpr char BOARD_SIZE = 8;
+constexpr int BOARD_SIZE = 8;
+
+class Piece; // solves class usage problem
+
+Color pieceColor(const Piece* const);
+bool isKing(const Piece* const);
 
 class GameBoardException : public std::exception {};
 
@@ -32,12 +38,12 @@ public:
 	void changeTurn();
 	void changeGameState(GameState);
 
-	void increaseQueen(Color);
+	void increaseKing(Color);
 
 	double score() const;
 
-	char getBlackQueenN() const;
-	char getWhiteQueenN() const;
+	char getBlackKingN() const;
+	char getWhiteKingN() const;
 
 	Piece*& operator[](const Position&);
 	const Piece* const& operator[](const Position&) const;

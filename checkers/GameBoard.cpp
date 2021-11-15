@@ -36,22 +36,22 @@ void GameBoard::changeGameState(GameState gameState) {
 	state.gameState = gameState;
 }
 
-void GameBoard::increaseQueen(Color _color) {
+void GameBoard::increaseKing(Color _color) {
 	if (_color == Color::WHITE)
-		state.whiteQueenN++;
-	else state.blackQueenN++;
+		state.whiteKingN++;
+	else state.blackKingN++;
 }
 
 double GameBoard::score() const {
-	return double(state.white) - double(state.black) + double(state.blackQueenN) * 0.5 - double(state.whiteQueenN) * 0.5;
+	return double(state.white) - double(state.black) + double(state.blackKingN) * 0.5 - double(state.whiteKingN) * 0.5;
 }
 
-char GameBoard::getBlackQueenN() const {
-	return state.blackQueenN;
+char GameBoard::getBlackKingN() const {
+	return state.blackKingN;
 }
 
-char GameBoard::getWhiteQueenN() const {
-	return state.whiteQueenN;
+char GameBoard::getWhiteKingN() const {
+	return state.whiteKingN;
 }
 
 Piece*& GameBoard::operator[](const Position& position) {
@@ -86,7 +86,7 @@ void GameBoard::printHistory(std::ostream& out) const {
 }
 
 GameBoard&& GameBoard::copy() const {
-	return GameBoard(state, board, lastMove);
+	return std::move(GameBoard(state, board, lastMove));
 }
 
 std::ostream& operator<<(std::ostream& out, const GameBoard& gameBoard) {
@@ -106,13 +106,14 @@ std::ostream& operator<<(std::ostream& out, const GameBoard& gameBoard) {
 		for (int y = 0; y < BOARD_SIZE; y++) {
 			char s = ' ';
 
-			//if (!gameBoard.isEmpty(y, BOARD_SIZE - 1 - x)) {
-			//	// get direct access to object field not to use extra checks
-			//	s = gameBoard.board[y][BOARD_SIZE - 1 - x]->isWhite() ? 'w' : 'b';
+			if (!gameBoard.isEmpty(y, BOARD_SIZE - 1 - x)) {
+				// direct access to object field not to use extra checks
+				s = pieceColor(gameBoard.board[y][x]) == Color::WHITE ? 'w' : 'b';
 
-			//	if (gameBoard.board[y][BOARD_SIZE - 1 - x]->isQueen())
-			//		s = std::toupper(s);
-			//}
+				// since GameBoard DOES NOT see King class
+				if (isKing(gameBoard.board[y][x]))
+					s = std::toupper(s);
+			}
 
 			out << s << " | ";
 		}

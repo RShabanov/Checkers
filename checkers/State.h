@@ -10,15 +10,16 @@ enum class GameState : char {
 struct State {
 	Color turnColor;
 	GameState gameState;
-	char blackQueenN, whiteQueenN, white, black;
+	char blackKingN, whiteKingN, white, black;
 
 	explicit State();
 	explicit State(
 		GameState _gameState,
 		Color _turnColor,
-		char _whiteQueenN = 0,
+		char _whiteKingN = 0,
 		char _white = 0,
-		char _blackQueenN = 0,
+		char _blackKingN = 0,
 		char _black = 0
 	);
+	explicit State(const State&);
 };
