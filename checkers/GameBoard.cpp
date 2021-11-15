@@ -2,15 +2,16 @@
 
 GameBoard::GameBoard(
 	const State& _state,
-	const Pieces& _pieces, 
+	const Board& _board,
+	const PiecesInfo& _piecesInfo,
 	const Move& _lastMove)
-	: state(_state), lastMove(_lastMove), pieces(_pieces) {}
-
-GameBoard::GameBoard(const GameBoard& gameBoard) 
-	: state(gameBoard.state), board(gameBoard.board), lastMove(gameBoard.lastMove) {}
+	: state(_state), lastMove(_lastMove), 
+	piecesInfo(_piecesInfo), board(_board) {}
 
 GameBoard::GameBoard(GameBoard&& gameBoard)
-	: state(gameBoard.state), board(gameBoard.board), lastMove(gameBoard.lastMove) {}
+	: state(gameBoard.state), board(gameBoard.board), 
+	lastMove(gameBoard.lastMove),
+	piecesInfo(gameBoard.piecesInfo) {}
 
 bool GameBoard::isEmpty(char y, char x) const {
 	if (!onBoard(y, x))
@@ -39,29 +40,15 @@ void GameBoard::changeGameState(GameState gameState) {
 	state.gameState = gameState;
 }
 
-void GameBoard::increaseKing(Color _color) {
-	if (_color == Color::WHITE)
-		pieces.whiteKingN++;
-	else pieces.blackKingN++;
-}
-
 double GameBoard::score() const {
-	return double(pieces.white.size()) - double(pieces.black.size()) + double(pieces.blackKingN) * 0.5 - double(pieces.whiteKingN) * 0.5;
+	return double(piecesInfo.whiteN) - double(piecesInfo.blackN) + double(piecesInfo.blackKingN) * 0.5 - double(piecesInfo.whiteKingN) * 0.5;
 }
 
-char GameBoard::getBlackKingN() const {
-	return pieces.blackKingN;
-}
-
-char GameBoard::getWhiteKingN() const {
-	return pieces.whiteKingN;
-}
-
-Piece*& GameBoard::operator[](const Position& position) {
+std::shared_ptr<Piece>& GameBoard::operator[](const Position& position) {
 	return (*this)[position.getY()][position.getX()];
 }
 
-const Piece* const& GameBoard::operator[](const Position& position) const {
+const std::shared_ptr<Piece>& GameBoard::operator[](const Position& position) const {
 	return (*this)[position.getY()][position.getX()];
 }
 

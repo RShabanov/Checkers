@@ -13,7 +13,7 @@ public:
 	explicit Piece(const Position&, Color);
 	virtual ~Piece() = default;
 
-	virtual Moves possibleMoves(const GameBoard&, bool onlyAttack = false) const = 0;
+	virtual Moves possibleMoves(const GameBoard&, const Position& from, bool onlyAttack = false) const = 0;
 	virtual bool isKing() const = 0;
 	//virtual void move()
 

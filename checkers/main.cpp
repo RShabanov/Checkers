@@ -9,3 +9,10 @@ int main() {
 
 	return 0;
 }
+
+GameBoard&& copyBoard(const GameBoard&) {
+	return std::move(GameBoard());
+}
+void movePiece(GameBoard*, const Position& from, const Position& to) {
+
+}

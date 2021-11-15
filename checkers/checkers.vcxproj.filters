@@ -45,7 +45,7 @@
     <ClCompile Include="Pawn.cpp">
       <Filter>Исходные файлы\Pieces</Filter>
     </ClCompile>
-    <ClCompile Include="Pieces.cpp">
+    <ClCompile Include="PiecesInfo.cpp">
       <Filter>Исходные файлы\Board</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,11 +65,11 @@
     <ClInclude Include="GameBoard.h">
       <Filter>Файлы заголовков\Board</Filter>
     </ClInclude>
-    <ClInclude Include="Pawn.h">
+    <ClInclude Include="PiecesInfo.h">
       <Filter>Файлы заголовков\Board</Filter>
     </ClInclude>
-    <ClInclude Include="Pieces.h">
-      <Filter>Файлы заголовков\Board</Filter>
+    <ClInclude Include="Pawn.h">
+      <Filter>Файлы заголовков\Pieces</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

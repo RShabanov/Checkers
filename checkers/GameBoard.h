@@ -1,6 +1,6 @@
 #pragma once
 #include "Position.h"
-#include "Pieces.h"
+#include "PiecesInfo.h"
 #include "State.h"
 
 #include <array>
@@ -13,14 +13,14 @@ class GameBoardException : public std::exception {};
 
 class GameBoard {
 public:
-	using BoardRow = std::array<Piece*, BOARD_SIZE>;
+	using BoardRow = std::array<std::shared_ptr<Piece>, BOARD_SIZE>;
 	using Board = std::array<BoardRow, BOARD_SIZE>;
 
 	explicit GameBoard(
 		const State& _state = State(),
-		const Pieces& _pieces = Pieces(),
+		const Board& _board = { nullptr },
+		const PiecesInfo& _pieces = PiecesInfo(),
 		const Move& _lastMove = {});
-	explicit GameBoard(const GameBoard&);
 	explicit GameBoard(GameBoard&&);
 	~GameBoard() = default;
 
@@ -33,25 +33,20 @@ public:
 	void changeTurn();
 	void changeGameState(GameState);
 
-	void increaseKing(Color);
-
 	double score() const;
 
-	char getBlackKingN() const;
-	char getWhiteKingN() const;
-
-	Piece*& operator[](const Position&);
-	const Piece* const& operator[](const Position&) const;
+	std::shared_ptr<Piece>& operator[](const Position&);
+	const std::shared_ptr<Piece>& operator[](const Position&) const;
 	BoardRow& operator[](char y);
 	const BoardRow& operator[](char y) const;
 
 	friend std::ostream& operator<<(std::ostream&, const GameBoard&);
 	void printHistory(std::ostream&) const;
 
+	PiecesInfo piecesInfo;
+
 private:
 	Board board;
-	Pieces pieces;
-
 	State state;
 	Move lastMove;
 };
