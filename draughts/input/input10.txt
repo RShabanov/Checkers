@@ -1,7 +1,7 @@
 b
 Black: 1
-ME5
+F6
 White: 3
-A1
-C3
-F4
+A5
+D4
+H4

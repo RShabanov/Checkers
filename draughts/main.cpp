@@ -11,30 +11,31 @@ void runTests();
 
 int main() {
 	try {
-		constexpr unsigned int movesNumber = 2;
+		//constexpr unsigned int movesNumber = 2;
 
-		string filename;
-		cout << "Enter input filename: ";
-		cin >> filename;
+		//string filename;
+		//cout << "Enter input filename: ";
+		//cin >> filename;
 
-		Checkers game(filename);
+		//Checkers game(filename);
 
-		//game.runNMoves(movesNumber, firstColor()); // play only N moves
-		game.run(firstColor()); // play the whole game
+		//game.runNMoves(movesNumber, game.currentColor()); // play only N moves
+		////game.run(firstColor()); // play the whole game
 
-		// if after game.runNMoves the game is not over
-		// we have to tell it
-		if (game.state() == GameState::STILL_PLAYING) {
-			cout << "Game is not over" << endl;;
-		}
+		//// if after game.runNMoves the game is not over
+		//// we have to tell it
+		//if (game.state() == GameState::STILL_PLAYING) {
+		//	cout << "Game is not over" << endl;;
+		//}
 
-		// find index where file extension starts
-		size_t lastindex = filename.find_last_of(".");
-		// remove this extension and add "-output.txt"
-		filename = filename.substr(0, lastindex) + "-output.txt";
-		game.save(filename);
+		//// find index where file extension starts
+		//size_t lastindex = filename.find_last_of(".");
+		//// remove this extension and add "-output.txt"
+		//filename = filename.substr(0, lastindex) + "-output.txt";
+		//game.save(filename);
 
-		cout << endl << "Result was saved. File: " << filename << endl;
+		//cout << endl << "Result was saved. File: " << filename << endl;
+		runTests();
 	}
 	catch (exception& e) {
 		cerr << e.what() << endl;
@@ -75,14 +76,15 @@ void runTests() {
 			"input/input7.txt",
 			"input/input8.txt",
 			"input/input9.txt",
+			"input/input10.txt",
 		};
 
 		for (auto& filename : files) {
 			cout << filename << endl;
 			Checkers game(filename);
 
-			//game.runNMoves(movesNumber, firstColor()); // play only N moves
-			game.run(firstColor()); // play the whole game
+			game.runNMoves(movesNumber, game.currentColor()); // play only N moves
+			//game.run(game.currentColor()); // play the whole game
 
 			// if after game.runNMoves the game is not over
 			// we have to tell it

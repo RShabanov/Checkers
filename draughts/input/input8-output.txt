@@ -1,4 +1,6 @@
-The whitesstarts.
+The whites starts.
+The whites won.
+History:
 B2 -> C3
 A3 -> B2
 C3 -> A1

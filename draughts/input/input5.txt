@@ -1,3 +1,4 @@
+w
 White: 1
 G3
 Black: 2

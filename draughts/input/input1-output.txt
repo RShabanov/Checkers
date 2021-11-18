@@ -1,7 +1,6 @@
-The whitesstarts.
+The whites starts.
+Game is not over.
+History:
 B2 -> D4 -> F6 -> H4
 F2 -> E1
 H4 -> F2
-E1 -> G3
-G1 -> F2
-G3 -> E1

@@ -1,16 +1,4 @@
-The blacksstarts.
-E5 -> G3
-C3 -> B4
-G3 -> F2
-A1 -> B2
-F2 -> E1
-B2 -> C3
-E1 -> F2
-B4 -> A5
-F2 -> C5
-C3 -> B4
-C5 -> A3
-A5 -> B6
-A3 -> D6
-B6 -> C7
-D6 -> B8
+The whites starts.
+The whites won.
+History:
+F4 -> D6

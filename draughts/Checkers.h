@@ -40,6 +40,8 @@ public:
 
 	void fromFile(const std::string& filename);
 
+	Color currentColor() const;
+
 	void run(Color turnColor = Color::WHITE);
 	void runNMoves(unsigned int moveNumber, Color turnColor = Color::WHITE);
 

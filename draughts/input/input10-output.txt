@@ -1,4 +1,6 @@
 The whites starts.
 The whites won.
 History:
-B2 -> D4
+A5 -> B6
+F6 -> E5
+D4 -> F6

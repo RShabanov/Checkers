@@ -11,6 +11,20 @@ void Checkers::fromFile(const std::string& filename) {
 
 	if (!fin.is_open()) throw CheckersException();
 	
+	std::string buff;
+	getline(fin, buff);
+
+	switch (std::tolower(buff.front())) {
+	case 'w':
+		board.state.turnColor = Color::WHITE;
+		break;
+	case 'b': 
+		board.state.turnColor = Color::BLACK;
+		break;
+	default:
+		throw CheckersException();
+	}
+
 	auto whiteRegex = std::regex("white:\\s*(\\d+)", std::regex_constants::icase);
 	auto blackRegex = std::regex("black:\\s*(\\d+)", std::regex_constants::icase);
 	std::smatch regexMatch;
@@ -22,7 +36,6 @@ void Checkers::fromFile(const std::string& filename) {
 	auto placementState = CheckersPlacement::UNDEFINED;
 
 	while (!fin.eof()) {
-		std::string buff;
 		getline(fin, buff);
 
 		if (std::regex_match(buff, regexMatch, whiteRegex)) {
@@ -65,6 +78,10 @@ void Checkers::fromFile(const std::string& filename) {
 	fin.close();
 }
 
+Color Checkers::currentColor() const {
+	return board.state.turnColor;
+}
+
 void Checkers::run(Color turnColor) {
 	runNMoves(-1, turnColor);
 }
@@ -81,7 +98,7 @@ void Checkers::runNMoves(unsigned int moveNumber, Color turnColor) {
 
 	// FOR DEBUG
 	/*std::cout << board << std::endl;
-	std::cin.get();*/
+	std::cin.get();
 
 	while (board.state.state == GameState::STILL_PLAYING) {
 		auto [score, newBoard] = minimax(board, depth, board.state.turnColor == Color::WHITE);
@@ -118,7 +135,13 @@ void Checkers::save(const std::string& filename) const {
 
 	if (!fout.is_open()) throw CheckersException();
 
-	fout << "The " << (firstMove == Color::WHITE ? "whites" : "blacks") << "starts." << std::endl;
+	fout << "The " << (firstMove == Color::WHITE ? "whites" : "blacks") << " starts." << std::endl;
+	if (state() == GameState::STILL_PLAYING)
+		fout << "Game is not over." << std::endl;
+	else 
+		fout << "The " << (firstMove == Color::WHITE ? "whites" : "blacks") << " won." << std::endl;
+
+	fout << "History:\n";
 	for (size_t i = 0; i < history.size(); i++) {
 		for (size_t moveIdx = 0; moveIdx < history[i].size() - 1; moveIdx++) {
 			fout << history[i][moveIdx] << " -> ";
@@ -209,7 +232,7 @@ std::pair<double, Board> Checkers::minimax(Board& board, int depth, bool whiteTu
 
 		// if moves empty an opponent wins
 		if (moves.empty())
-			board.changeGameState(bestMove.state.turnColor == Color::WHITE ? GameState::BLACK_WON : GameState::WHITE_WON);
+			bestMove.changeGameState(bestMove.state.turnColor == Color::WHITE ? GameState::BLACK_WON : GameState::WHITE_WON);
 		return { maxScore, std::move(bestMove) };
 	}
 	else {
@@ -227,7 +250,7 @@ std::pair<double, Board> Checkers::minimax(Board& board, int depth, bool whiteTu
 
 		// if moves empty an opponent wins
 		if (moves.empty())
-			board.changeGameState(bestMove.state.turnColor == Color::WHITE ? GameState::BLACK_WON : GameState::WHITE_WON);
+			bestMove.changeGameState(bestMove.state.turnColor == Color::WHITE ? GameState::BLACK_WON : GameState::WHITE_WON);
 		return { minScore, std::move(bestMove) };
 	}
 }
