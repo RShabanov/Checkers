@@ -32,5 +32,7 @@ public:
 };
 
 // so inherited class can use
-GameBoard&& copyBoard(const GameBoard&);
-void movePiece(GameBoard*, const Position& from, const Position& to);
+void movePiece(GameBoard*, 
+	const Position& from, 
+	const Position& to,
+	const Position& previous);

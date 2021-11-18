@@ -8,9 +8,9 @@ class PositionException : std::exception {};
 
 // Position class DOES NOT check if it is valid position
 class Position {
-	char x, y;
+	char y, x;
 public:
-	explicit Position(char _x, char _y);
+	explicit Position(char _y, char _x);
 	explicit Position(const std::string&);
 	Position(const Position&);
 	Position(Position&&);

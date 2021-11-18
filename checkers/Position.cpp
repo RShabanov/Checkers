@@ -1,6 +1,6 @@
 #include "Position.h"
 
-Position::Position(char _x, char _y)
+Position::Position(char _y, char _x)
 	: x(_x), y(_y) {}
 
 Position::Position(const std::string& pos) { set(pos); }

@@ -35,6 +35,10 @@ public:
 
 	double score() const;
 
+	void addLastMove(const Position&);
+
+	GameBoard&& copy() const;
+
 	std::shared_ptr<Piece>& operator[](const Position&);
 	const std::shared_ptr<Piece>& operator[](const Position&) const;
 	BoardRow& operator[](char y);

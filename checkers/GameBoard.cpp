@@ -44,6 +44,14 @@ double GameBoard::score() const {
 	return double(piecesInfo.whiteN) - double(piecesInfo.blackN) + double(piecesInfo.blackKingN) * 0.5 - double(piecesInfo.whiteKingN) * 0.5;
 }
 
+void GameBoard::addLastMove(const Position& _position) {
+	lastMove.emplace_back(_position);
+}
+
+GameBoard&& GameBoard::copy() const {
+	return std::move(GameBoard(state, board, piecesInfo, lastMove));
+}
+
 std::shared_ptr<Piece>& GameBoard::operator[](const Position& position) {
 	return (*this)[position.getY()][position.getX()];
 }

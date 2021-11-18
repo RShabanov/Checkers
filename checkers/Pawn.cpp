@@ -6,6 +6,8 @@ Pawn::Pawn(const Position& _position, Color _color)
 Moves Pawn::possibleMoves(const GameBoard& board, const Position& from, bool onlyAttack) const {
 	Moves killMoves, usualMoves;
 
+	// Moves = std::vector<Move>
+	// Move = std::vector<Position>
 	// checks neighbourhood:
 	// (-1, -1) . (-1, 1)
 	//	   .	o	 .
@@ -33,22 +35,22 @@ Moves Pawn::possibleMoves(const GameBoard& board, const Position& from, bool onl
 					board.isEmpty(to)) {
 					Position opponentPosition(ny - y, nx - x);
 
-					killMoves.emplace_back(std::vector<Position>(1, to));
-
 					// since we can kill an opponent
 					// we have to create a new board not to affect on the original one
-					GameBoard newBoard(copyBoard(board));
-					movePiece(&newBoard, from, to);
+					GameBoard newBoard(board.copy());
+					movePiece(&newBoard, from, to, opponentPosition);
 
 					// if a pawn is still a pawn then
 					// it generates a kill chain as a pawn
 					// otherwise it generates a kill chain as a king
 					auto moves = newBoard[to]->possibleMoves(newBoard, to, newBoard[to]->isKing());
 					
+					if (moves.empty())
+						killMoves.emplace_back(Move(1, to));
+
 					for (size_t moveIdx = 0; moveIdx < moves.size(); moveIdx++) {
+						killMoves.emplace_back(Move(1, to));
 						killMoves.back().insert(killMoves.back().end(), moves[moveIdx].begin(), moves[moveIdx].end());
-						if (moveIdx != moves.size() - 1)
-							killMoves.emplace_back(std::vector<Position>(1, to));
 					}
 				}
 			}
@@ -60,7 +62,7 @@ Moves Pawn::possibleMoves(const GameBoard& board, const Position& from, bool onl
 					(color == Color::BLACK && y > 0))
 					continue;
 
-				usualMoves.emplace_back(std::vector<Position>(1, to));
+				usualMoves.emplace_back(Move(1, to));
 			}
 		}
 	}
