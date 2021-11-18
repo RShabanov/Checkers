@@ -35,7 +35,7 @@ Moves Man::possibleMoves(const Board& board, bool onlyAttack) const {
 								 opponentPosition(nx - x, ny - y);
 
 						Board newBoard = boardCopy(board);
-						newBoard[opponentPosition] = nullptr;
+						moveFigure(&newBoard, position, current);
 
 						chainMoves.emplace_back(std::vector<Position>(1, current));
 
@@ -119,15 +119,13 @@ void Man::eatMove(
 					sizeBefore = (*moves)[idx].size();
 					(*moves)[idx].emplace_back(to);
 
-					Figure* opponentTempStorage = board[opponentPosition];
-					board[opponentPosition] = nullptr;
+					Board newBoard = boardCopy(board);
+					moveFigure(&newBoard, current, to);
 
-					if (onQueenPositionIf(board, to))
-						queenMove(board, to, *moves);
+					if (onQueenPositionIf(newBoard, to))
+						queenMove(newBoard, to, *moves);
 					else
-						eatMove(board, to, opponentPosition, moves, idx);
-
-					board[opponentPosition] = opponentTempStorage;
+						eatMove(newBoard, to, opponentPosition, moves, idx);
 
 					finishBranch = true;
 				}
@@ -137,7 +135,7 @@ void Man::eatMove(
 }
 
 void Man::queenMove(Board& board, const Position& current, Moves& chainMoves) const {
-	moveFigure(&board, position, current);
+	//moveFigure(&board, position, current);
 
 	auto moves = board[current]->possibleMoves(board, true);
 	if (moves.empty())
@@ -216,6 +214,7 @@ void killOpponent(Board* _board, const Position& opponentPosition, bool removeBl
 			board[opponentPosition] = nullptr;
 			(*checkers)[i].swap((*checkers).back());
 			checkers->pop_back();
+			break;
 		}
 	}
 

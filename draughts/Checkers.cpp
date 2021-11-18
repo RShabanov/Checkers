@@ -97,7 +97,7 @@ void Checkers::runNMoves(unsigned int moveNumber, Color turnColor) {
 	auto checkers = (board.state.turnColor == Color::BLACK) ? &board.white : &board.black;
 
 	// FOR DEBUG
-	/*std::cout << board << std::endl;
+	std::cout << board << std::endl;
 	std::cin.get();
 
 	while (board.state.state == GameState::STILL_PLAYING) {
@@ -111,10 +111,10 @@ void Checkers::runNMoves(unsigned int moveNumber, Color turnColor) {
 		history.emplace_back(board.history);
 
 		// FOR DEBUG
-		/*std::cin.get();
+		std::cin.get();
 		system("cls");
 		std::cout << board << std::endl;
-		board.printHistory(std::cout);*/
+		board.printHistory(std::cout);
 
 		board.changeTurn();
 
