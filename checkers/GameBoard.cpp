@@ -6,9 +6,11 @@ GameBoard::GameBoard(
 	const PiecesInfo& _piecesInfo,
 	const Move& _lastMove)
 	: state(_state), lastMove(_lastMove), 
-	piecesInfo(_piecesInfo), board(_board) {}
+	piecesInfo(_piecesInfo) {
+	board = _board;
+}
 
-GameBoard::GameBoard(GameBoard&& gameBoard)
+GameBoard::GameBoard(const GameBoard& gameBoard)
 	: state(gameBoard.state), board(gameBoard.board), 
 	lastMove(gameBoard.lastMove),
 	piecesInfo(gameBoard.piecesInfo) {}
@@ -48,8 +50,9 @@ void GameBoard::addLastMove(const Position& _position) {
 	lastMove.emplace_back(_position);
 }
 
-GameBoard&& GameBoard::copy() const {
-	return std::move(GameBoard(state, board, piecesInfo, lastMove));
+GameBoard GameBoard::copy() const {
+	GameBoard newGameBoard(state, board, piecesInfo, lastMove);
+	return newGameBoard;
 }
 
 std::shared_ptr<Piece>& GameBoard::operator[](const Position& position) {
@@ -95,12 +98,12 @@ std::ostream& operator<<(std::ostream& out, const GameBoard& gameBoard) {
 	}
 	out << std::endl;
 
-	for (int x = 0; x < BOARD_SIZE; x++) {
-		out << " " << BOARD_SIZE - x << " | ";
-		for (int y = 0; y < BOARD_SIZE; y++) {
+	for (int y = BOARD_SIZE - 1; y >= 0; y--) {
+		out << " " << y + 1 << " | ";
+		for (int x = 0; x < BOARD_SIZE; x++) {
 			char s = ' ';
 
-			if (!gameBoard.isEmpty(y, BOARD_SIZE - 1 - x)) {
+			if (!gameBoard.isEmpty(y, x)) {
 				// direct access to object field not to use extra checks
 				s = gameBoard.board[y][x]->isWhite() ? 'w' : 'b';
 

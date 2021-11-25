@@ -21,7 +21,7 @@ public:
 		const Board& _board = { nullptr },
 		const PiecesInfo& _pieces = PiecesInfo(),
 		const Move& _lastMove = {});
-	explicit GameBoard(GameBoard&&);
+	GameBoard(const GameBoard&);
 	~GameBoard() = default;
 
 	bool isEmpty(char y, char x) const;
@@ -37,7 +37,7 @@ public:
 
 	void addLastMove(const Position&);
 
-	GameBoard&& copy() const;
+	GameBoard copy() const;
 
 	std::shared_ptr<Piece>& operator[](const Position&);
 	const std::shared_ptr<Piece>& operator[](const Position&) const;
@@ -50,7 +50,7 @@ public:
 	PiecesInfo piecesInfo;
 
 private:
-	Board board;
+	Board board = { nullptr };
 	State state;
 	Move lastMove;
 };
