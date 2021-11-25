@@ -49,7 +49,7 @@
       <Filter>Исходные файлы\Board</Filter>
     </ClCompile>
     <ClCompile Include="King.cpp">
-      <Filter>Исходные файлы</Filter>
+      <Filter>Исходные файлы\Pieces</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -75,7 +75,7 @@
       <Filter>Файлы заголовков\Pieces</Filter>
     </ClInclude>
     <ClInclude Include="King.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Файлы заголовков\Pieces</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

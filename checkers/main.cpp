@@ -6,17 +6,31 @@ using namespace std;
 
 int main() {
 	GameBoard board{};
-	King k(Position("E5"), Color::WHITE);
+	auto k = std::shared_ptr<Piece>(new King(Position("E5"), Color::WHITE));
 	auto p = std::shared_ptr<Piece>(new Pawn(Position("G3"), Color::BLACK));
+	auto p2 = std::shared_ptr<Piece>(new Pawn(Position("D6"), Color::BLACK));
+	auto p3 = std::shared_ptr<Piece>(new Pawn(Position("B6"), Color::BLACK));
+	auto p4 = std::shared_ptr<Piece>(new Pawn(Position("C3"), Color::BLACK));
+	auto p5 = std::shared_ptr<Piece>(new Pawn(Position("G5"), Color::BLACK));
 
 	board[p->getPosition()] = p;
+	board[p2->getPosition()] = p2;
+	board[p3->getPosition()] = p3;
+	board[p4->getPosition()] = p4;
+	board[p5->getPosition()] = p5;
+	board[k->getPosition()] = k;
 
-	cout << "King position: " << k.getPosition() << endl;
+	cout << "King position: " << k->getPosition() << endl;
 
-	auto moves = k.possibleMoves(board, k.getPosition(), false);
+	auto moves = k->possibleMoves(board, k->getPosition(), false);
 	for (const auto& move : moves) {
-		for (const auto& p : move) {
-			cout << " -> " << p;
+		int cnt = 0;
+		for (auto i = move.size() - 1; i >= 0; i--) {
+			if (cnt++ != 0)
+				cout << " -> ";
+			cout << move[i];
+
+			if (i == 0) break;
 		}
 		cout << endl;
 	}
@@ -40,7 +54,6 @@ void movePiece(
 
 	board[to] = board[from];
 	board[from] = nullptr;
-
 	board[previous] = nullptr;
 
 	board.addLastMove(to);

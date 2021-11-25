@@ -24,14 +24,13 @@ Moves King::possibleMoves(const GameBoard& board, const Position& from, bool onl
                     if (board[to]->getColor() == color) break;
 
                     while (true) {
-                        previous = to;
                         to.add(y, x);
 
                         if (board.onBoard(to) && board.isEmpty(to)) {
                             // since we can't affect on board
                             GameBoard newBoard(board.copy());
 
-                            movePiece(&newBoard, from, to, previous);
+                            movePiece(&newBoard, from, to, previous); // previous == opponentPosition
                             auto moves = newBoard[to]->possibleMoves(newBoard, to, true);
 
                             if (moves.empty())
@@ -50,7 +49,6 @@ Moves King::possibleMoves(const GameBoard& board, const Position& from, bool onl
                 else if (!onlyAttack && killMoves.empty())
                     usualMoves.emplace_back(Move(1, to));
 
-                previous = to;
                 to.add(y, x);
             }
         }
